@@ -1,0 +1,1212 @@
+/* === HappiU Visual Foundation: Vibrant Palette, Login 3D, Tutors & Glass Highlights === */
+
+/* === HappiU Vibrant Campus Color & Visual Polish === */
+
+/* 1. Sunlit Ambient Canvas & Role-Aware Glows */
+body {
+  background:
+    radial-gradient(900px 420px at 8% -4%, rgba(255, 166, 77, 0.22), transparent 62%),
+    radial-gradient(760px 380px at 94% 2%, rgba(46, 196, 182, 0.14), transparent 58%),
+    linear-gradient(180deg, #fff6eb 0%, #fcfaf6 420px, #f9f7f3 100%);
+}
+body[data-role="employer"] {
+  background:
+    radial-gradient(880px 400px at 10% -4%, rgba(16, 185, 129, 0.20), transparent 62%),
+    radial-gradient(720px 360px at 92% 4%, rgba(251, 146, 60, 0.14), transparent 58%),
+    linear-gradient(180deg, #eaf9f2 0%, #fafbf9 420px);
+}
+body[data-role="admin"] {
+  background:
+    radial-gradient(880px 400px at 10% -4%, rgba(59, 130, 246, 0.18), transparent 62%),
+    radial-gradient(720px 360px at 92% 4%, rgba(139, 92, 246, 0.14), transparent 58%),
+    linear-gradient(180deg, #edf4ff 0%, #fafbfe 420px);
+}
+
+/* 2. Crisp Glass Header + Signature HappiU Rainbow-Sunset Accent Bar */
+.mast {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(255, 253, 249, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #f0dfd0;
+  box-shadow: 0 4px 20px rgba(173, 58, 6, 0.05);
+}
+.mast::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, #ff5e00 0%, #ff9a1f 36%, #14b8a6 70%, #6366f1 100%);
+  pointer-events: none;
+}
+.mast .account:not([hidden]) {
+  background: linear-gradient(135deg, #ffedd8 0%, #ffe0be 100%);
+  color: #8f2d00;
+  border: 1px solid #f6c99b;
+  box-shadow: 0 2px 8px rgba(249, 99, 2, 0.12);
+}
+body[data-role="employer"] .mast .account:not([hidden]) {
+  background: linear-gradient(135deg, #dff7ec 0%, #c7f0dd 100%);
+  color: #0e5a3f;
+  border-color: #9be0c2;
+}
+body[data-role="admin"] .mast .account:not([hidden]) {
+  background: linear-gradient(135deg, #e2efff 0%, #cfe4ff 100%);
+  color: #1a4b8c;
+  border-color: #a9cbfa;
+}
+
+/* 3. Vibrant Tactile Primary Buttons */
+.primary:not(:disabled) {
+  background: linear-gradient(135deg, #f96302 0%, #d43f00 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(212, 63, 0, 0.22);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e85800 0%, #b83300 100%);
+  box-shadow: 0 6px 16px rgba(212, 63, 0, 0.28);
+  transform: translateY(-1px);
+}
+
+/* 4. Colorful, Scannable Sidebar Navigation */
+body[data-role] #nav .nav-link {
+  border-radius: 14px;
+  padding: 8px 12px;
+  color: #3f4640;
+  transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+body[data-role] #nav .nav-link .nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #f5efe7;
+  color: #8f3a0b;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+body[data-role] #nav .nav-link[data-route="home"] .nav-icon { background: #ffefe0; color: #c84600; }
+body[data-role] #nav .nav-link[data-route="tutors"] .nav-icon { background: #e3f6ee; color: #0f6f52; }
+body[data-role] #nav .nav-link[data-route="schedule"] .nav-icon { background: #e6f0ff; color: #1d5aa6; }
+body[data-role] #nav .nav-link[data-route="applications"] .nav-icon { background: #f1eaff; color: #5b32b8; }
+body[data-role] #nav .nav-link[data-route="work"] .nav-icon { background: #fef4d4; color: #9c5a00; }
+body[data-role] #nav .nav-link[data-route="profile"] .nav-icon { background: #fdeaf1; color: #a32a57; }
+body[data-role] #nav .nav-link[data-route="reports"] .nav-icon { background: #ffece6; color: #b83714; }
+body[data-role] #nav .nav-link:hover:not([aria-current="page"]) {
+  background: rgba(255, 241, 226, 0.72);
+  color: #202521;
+}
+body[data-role] #nav .nav-link[aria-current="page"] {
+  background: linear-gradient(135deg, #fff0df 0%, #ffe1c2 100%);
+  color: #932e00;
+  font-weight: 700;
+  border: 1px solid #f7c799;
+  box-shadow: 0 5px 14px rgba(249, 99, 2, 0.13);
+}
+body[data-role] #nav .nav-link[aria-current="page"] .nav-icon {
+  background: linear-gradient(135deg, #ff6b14 0%, #d43e00 100%);
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(212, 62, 0, 0.25);
+}
+body[data-role="employer"] #nav .nav-link[aria-current="page"] {
+  background: linear-gradient(135deg, #e2f8ee 0%, #cbf2e0 100%);
+  color: #0e5a3f;
+  border-color: #97dec0;
+  box-shadow: 0 5px 14px rgba(16, 185, 129, 0.14);
+}
+body[data-role="employer"] #nav .nav-link[aria-current="page"] .nav-icon {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  color: #fff;
+}
+body[data-role="admin"] #nav .nav-link[aria-current="page"] {
+  background: linear-gradient(135deg, #e5f0ff 0%, #d0e4ff 100%);
+  color: #174687;
+  border-color: #a4c7f9;
+  box-shadow: 0 5px 14px rgba(59, 130, 246, 0.14);
+}
+body[data-role="admin"] #nav .nav-link[aria-current="page"] .nav-icon {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #fff;
+}
+
+/* 5. Expressive, Color-Coded Page Banners */
+body[data-role] .pagehead {
+  padding: 18px 22px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  border: 1px solid #f3d2b0;
+  background: linear-gradient(135deg, #fff1e0 0%, #ffe5c9 62%, #fff8ee 100%);
+  box-shadow: 0 6px 20px rgba(217, 72, 15, 0.06);
+}
+body[data-role="student"] .pagehead[data-page="home"] {
+  padding: 18px 22px;
+  min-height: 76px;
+}
+body[data-role="student"] .pagehead[data-page="home"] h1 {
+  color: #8f2d00;
+}
+body[data-role] .pagehead[data-page="schedule"] {
+  background: linear-gradient(135deg, #e6f2ff 0%, #d6e9ff 65%, #f2f8ff 100%);
+  border-color: #b5d5fa;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.06);
+}
+body[data-role] .pagehead[data-page="schedule"] h1 { color: #16498a; }
+body[data-role] .pagehead[data-page="applications"] {
+  background: linear-gradient(135deg, #f2ecff 0%, #e6dcff 65%, #f9f6ff 100%);
+  border-color: #d0befa;
+  box-shadow: 0 6px 20px rgba(109, 40, 217, 0.06);
+}
+body[data-role] .pagehead[data-page="applications"] h1 { color: #4d2691; }
+body[data-role] .pagehead[data-page="work"] {
+  background: linear-gradient(135deg, #e2f8ee 0%, #cff3e2 65%, #f2fcf7 100%);
+  border-color: #a7e3c6;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.07);
+}
+body[data-role] .pagehead[data-page="work"] h1 { color: #0f5c40; }
+body[data-role] .pagehead[data-page="profile"] {
+  background: linear-gradient(135deg, #fdecf2 0%, #fadbe6 65%, #fff6f9 100%);
+  border-color: #f4bdd0;
+  box-shadow: 0 6px 20px rgba(219, 39, 119, 0.06);
+}
+body[data-role] .pagehead[data-page="profile"] h1 { color: #8c214a; }
+body[data-role] .pagehead[data-page="reports"] {
+  background: linear-gradient(135deg, #fff5d6 0%, #ffe8ad 65%, #fffbf0 100%);
+  border-color: #f3d082;
+  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.07);
+}
+body[data-role] .pagehead[data-page="reports"] h1 { color: #7c4700; }
+body[data-role="employer"] .pagehead {
+  background: linear-gradient(135deg, #e2f8ee 0%, #cff2e2 65%, #f3fcf8 100%);
+  border-color: #a6e2c6;
+}
+body[data-role="employer"] .pagehead h1 { color: #0e5a3f; }
+body[data-role="admin"] .pagehead {
+  background: linear-gradient(135deg, #e6f1ff 0%, #d4e7ff 65%, #f4f8ff 100%);
+  border-color: #b4d2fa;
+}
+body[data-role="admin"] .pagehead h1 { color: #16488a; }
+body[data-page="tutors"] .pagehead.pagehead-illustrated {
+  background: linear-gradient(135deg, #dff6ec 0%, #d2f1e8 52%, #eefbf5 100%);
+  border: 1px solid #a9e2cc;
+  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.09);
+}
+body[data-page="tutors"] .pagehead h1 { color: #0f5443; }
+body[data-page="tutors"] .tutor-actions .primary {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.24);
+}
+body[data-page="tutors"] .tutor-actions .primary:hover {
+  background: linear-gradient(135deg, #0b7e74 0%, #0c5f59 100%);
+}
+
+/* 6. Sunlit Landing Hero Enhancement */
+.landing-hero {
+  background: linear-gradient(135deg, #fff2df 0%, #ffe6c4 52%, #fff6e8 100%);
+  border: 1px solid #f4cda0;
+  box-shadow: 0 14px 36px rgba(217, 72, 15, 0.09);
+}
+.landing-copy h1 span { color: #c43c04; }
+.landing-actions .primary {
+  background: linear-gradient(135deg, #ff6a13 0%, #cf3b02 100%);
+  box-shadow: 0 5px 0 #942900, 0 10px 22px rgba(207, 59, 2, 0.22);
+}
+.landing-art::before {
+  background: radial-gradient(circle at 38% 38%, #ffd782 0%, #ffbc66 60%, #7ad8b9 100%);
+  opacity: 0.92;
+}
+
+/* 7. Heroic "งานแนะนำสำหรับคุณ" Showcase Container */
+.recommendations {
+  background: linear-gradient(155deg, #fff6ea 0%, #ffeed9 48%, #edf9f3 100%);
+  border: 1px solid #f4d6b5;
+  border-radius: 28px;
+  padding: 22px 24px 26px;
+  margin-block: 6px 26px;
+  box-shadow: 0 12px 32px rgba(217, 72, 15, 0.07);
+}
+.recommendations > .section-head h2 {
+  color: #8f2d00;
+}
+.recommendations > .section-head .icon {
+  color: #f96302;
+}
+
+/* 8. Category-Coded Recommended Job Cards (Emerald / Apricot / Indigo) */
+.job-card.is-recommended {
+  border: 1.5px solid #f0dfd0;
+  box-shadow: 0 10px 24px rgba(55, 38, 22, 0.06);
+}
+.job-card.is-recommended[data-kind="campus"] {
+  border-color: #bfe8d5;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.08);
+}
+.job-card.is-recommended[data-kind="near"] {
+  border-color: #f6cfa4;
+  box-shadow: 0 10px 24px rgba(249, 115, 22, 0.09);
+}
+.job-card.is-recommended[data-kind="online"] {
+  border-color: #d2c5fa;
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.08);
+}
+.job-card.is-recommended[data-kind="campus"] .job-card-photo { border-bottom: 3.5px solid #10b981; }
+.job-card.is-recommended[data-kind="near"] .job-card-photo { border-bottom: 3.5px solid #f97316; }
+.job-card.is-recommended[data-kind="online"] .job-card-photo { border-bottom: 3.5px solid #7c3aed; }
+
+/* Color-Coded Match Summary Panels with High Contrast */
+.is-recommended[data-kind="campus"] .recommendation-summary {
+  background: linear-gradient(135deg, #e5f9ef 0%, #f1fcf6 100%);
+  border: 1px solid #b5e6cf;
+  color: #16593f;
+}
+.is-recommended[data-kind="campus"] .match-heading > span { color: #19684a; }
+.is-recommended[data-kind="campus"] .match-score { color: #0b6b45; }
+
+.is-recommended[data-kind="near"] .recommendation-summary {
+  background: linear-gradient(135deg, #fff2e0 0%, #fff8ee 100%);
+  border: 1px solid #f7cfa2;
+  color: #7c3004;
+}
+.is-recommended[data-kind="near"] .match-heading > span { color: #9c3d06; }
+.is-recommended[data-kind="near"] .match-score { color: #c43f00; }
+
+.is-recommended[data-kind="online"] .recommendation-summary {
+  background: linear-gradient(135deg, #f1ecff 0%, #f8f5ff 100%);
+  border: 1px solid #d4c6fb;
+  color: #452494;
+}
+.is-recommended[data-kind="online"] .match-heading > span { color: #5630b3; }
+.is-recommended[data-kind="online"] .match-score { color: #5b2bc4; }
+
+.is-recommended .recommendation-summary li {
+  position: relative;
+  padding-inline-start: 14px;
+}
+.is-recommended .recommendation-summary li::before {
+  content: "•";
+  position: absolute;
+  inset-inline-start: 0;
+  font-weight: 800;
+  color: currentColor;
+  opacity: 0.78;
+}
+
+.is-recommended .job-card-facts .pay {
+  color: #c83d04;
+}
+.is-recommended .job-card-footer .text-button {
+  background: #fff2e4;
+  color: #a83500;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 12px;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+.is-recommended .job-card-footer .text-button:hover {
+  background: #f96302;
+  color: #ffffff;
+}
+.is-recommended[data-kind="campus"] .job-card-footer .text-button {
+  background: #e6f7ef;
+  color: #0e6343;
+}
+.is-recommended[data-kind="campus"] .job-card-footer .text-button:hover {
+  background: #0f8a5f;
+  color: #ffffff;
+}
+.is-recommended[data-kind="online"] .job-card-footer .text-button {
+  background: #f0ebff;
+  color: #532ab5;
+}
+.is-recommended[data-kind="online"] .job-card-footer .text-button:hover {
+  background: #6d3be0;
+  color: #ffffff;
+}
+
+/* 9. Colorful Category Filter Chips */
+.landing-pin-filters .chip[data-action],
+.filters .chip[data-action] {
+  border-radius: 999px;
+  font-weight: 600;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .15s ease, box-shadow .18s ease;
+}
+.landing-pin-filters .chip[data-action][data-id="all"],
+.filters .chip[data-action][data-id="all"] {
+  background: #fff3e6;
+  border-color: #f4c89b;
+  color: #963604;
+}
+.landing-pin-filters .chip[data-action][data-id="all"][aria-pressed="true"],
+.filters .chip[data-action][data-id="all"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #f96302 0%, #d43e00 100%);
+  border-color: #d43e00;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(212, 62, 0, 0.24);
+}
+.landing-pin-filters .chip[data-action][data-id="campus"],
+.filters .chip[data-action][data-id="campus"] {
+  background: #e5f8ef;
+  border-color: #a9e2c7;
+  color: #0f6646;
+}
+.landing-pin-filters .chip[data-action][data-id="campus"][aria-pressed="true"],
+.filters .chip[data-action][data-id="campus"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #10b981 0%, #058359 100%);
+  border-color: #058359;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(5, 131, 89, 0.24);
+}
+.landing-pin-filters .chip[data-action][data-id="near"],
+.filters .chip[data-action][data-id="near"] {
+  background: #fff4d9;
+  border-color: #f4ce82;
+  color: #8f4700;
+}
+.landing-pin-filters .chip[data-action][data-id="near"][aria-pressed="true"],
+.filters .chip[data-action][data-id="near"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #f59e0b 0%, #d96604 100%);
+  border-color: #d96604;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(217, 102, 4, 0.24);
+}
+.landing-pin-filters .chip[data-action][data-id="online"],
+.filters .chip[data-action][data-id="online"] {
+  background: #f1ebff;
+  border-color: #cebffa;
+  color: #542db3;
+}
+.landing-pin-filters .chip[data-action][data-id="online"][aria-pressed="true"],
+.filters .chip[data-action][data-id="online"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  border-color: #5b21b6;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(91, 33, 182, 0.24);
+}
+.period-choice[aria-pressed="true"] {
+  background: linear-gradient(135deg, #fff0de 0%, #ffe0be 100%);
+  border-color: #e67222;
+  color: #8f2d00;
+  font-weight: 700;
+}
+
+/* 10. All Jobs Cards, Tutor Cards & Workspace Stat Tiles */
+.job-card[data-kind]:not(.is-recommended) {
+  border-top: 3.5px solid #f59e0b;
+  border-color: #e9dfd3;
+  border-top-color: #f97316;
+  box-shadow: 0 4px 14px rgba(60, 42, 24, 0.04);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.job-card[data-kind="campus"]:not(.is-recommended) { border-top-color: #10b981; }
+.job-card[data-kind="near"]:not(.is-recommended) { border-top-color: #f97316; }
+.job-card[data-kind="online"]:not(.is-recommended) { border-top-color: #7c3aed; }
+.job-card[data-kind]:not(.is-recommended):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(60, 42, 24, 0.09);
+}
+.job-card .job-card-facts .pay {
+  color: #c23b04;
+  font-weight: 700;
+}
+.tutor-card {
+  border: 1.5px solid #cdebe0;
+  box-shadow: 0 8px 22px rgba(15, 118, 110, 0.07);
+}
+.tutor-card:hover {
+  border-color: #66cdaa;
+  box-shadow: 0 14px 28px rgba(15, 118, 110, 0.13);
+}
+
+.workspace-stats > div:nth-child(4n+1) {
+  background: linear-gradient(135deg, #fff4e8 0%, #ffffff 100%);
+  border-color: #f5cfa5;
+  border-top: 3px solid #f97316;
+}
+.workspace-stats > div:nth-child(4n+2) {
+  background: linear-gradient(135deg, #e9faf2 0%, #ffffff 100%);
+  border-color: #b4e6cf;
+  border-top: 3px solid #10b981;
+}
+.workspace-stats > div:nth-child(4n+3) {
+  background: linear-gradient(135deg, #edf4ff 0%, #ffffff 100%);
+  border-color: #bdd7fa;
+  border-top: 3px solid #3b82f6;
+}
+.workspace-stats > div:nth-child(4n+4) {
+  background: linear-gradient(135deg, #f4efff 0%, #ffffff 100%);
+  border-color: #d6c7fa;
+  border-top: 3px solid #7c3aed;
+}
+
+@media(max-width: 640px) {
+  .recommendations {
+    padding: 16px 14px 20px;
+    border-radius: 22px;
+  }
+  body[data-role] .pagehead {
+    padding: 14px 16px;
+    border-radius: 16px;
+  }
+}
+
+.entry {
+  border-radius: 24px;
+  border-color: #efdac2;
+  box-shadow: 0 18px 44px rgba(64, 38, 18, 0.08);
+}
+.entry-brand {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(165deg, #fff4e4 0%, #ffe8ca 100%);
+  padding: 28px 24px 32px;
+  gap: 6px;
+}
+.entry-art {
+  position: relative;
+  width: min(370px, 100%);
+  aspect-ratio: 1.12;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+.entry-art::before {
+  content: "";
+  position: absolute;
+  inset: 14% 12% 8% 12%;
+  border-radius: 48% 52% 44% 56%;
+  background: #ffd194;
+  transform: rotate(-7deg);
+  z-index: -1;
+}
+.entry-art img {
+  width: 108%;
+  height: 108%;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 18px rgba(171, 102, 41, 0.18));
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+  animation: nu-mascot-float 5.4s ease-in-out infinite;
+}
+.entry-brand:hover .entry-art img {
+  transform: translateY(-5px) scale(1.03);
+}
+.entry-intro h2 {
+  color: #3a2920;
+  font-weight: 700;
+}
+body.at-login footer,
+body.at-login .demo {
+  padding-inline: 20px;
+}
+@keyframes nu-mascot-float {
+  0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+  50% { transform: translateY(-8px) rotate(0.6deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entry-art img { animation: none; transition: none; }
+}
+
+/* === Tutors Page: iPhone (iOS Liquid Glass) x Naresuan University (มอนอ) === */
+body[data-page="tutors"] .pagehead.tutor-hero-rich {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.95fr);
+  align-items: center;
+  gap: 24px;
+  min-height: 262px;
+  padding: 28px 34px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background:
+    radial-gradient(460px 280px at 8% 12%, rgba(255, 146, 56, 0.24), transparent 64%),
+    radial-gradient(420px 280px at 56% 96%, rgba(196, 138, 255, 0.22), transparent 62%),
+    radial-gradient(460px 300px at 92% 24%, rgba(56, 211, 179, 0.28), transparent 66%),
+    linear-gradient(135deg, #fff6ec 0%, #f3f7ff 52%, #e6faf3 100%);
+  box-shadow:
+    0 18px 42px rgba(29, 29, 31, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  margin-bottom: 18px;
+}
+.tutor-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+}
+.tutor-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 14px rgba(29, 29, 31, 0.06);
+  color: #2c2c30;
+  font-size: .8rem;
+  font-weight: 700;
+}
+.nu-ios-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b1a 0%, #a855f7 100%);
+  box-shadow: 0 0 8px rgba(255, 107, 26, 0.45);
+}
+body[data-page="tutors"] .tutor-hero-rich h1 {
+  margin: 0;
+  font-size: clamp(2.05rem, 3.2vw, 2.8rem);
+  line-height: 1.16;
+  letter-spacing: -.025em;
+  background: linear-gradient(135deg, #1d1d1f 0%, #9a3400 58%, #5b21b6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+body[data-page="tutors"] .tutor-hero-rich p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: .98rem;
+  line-height: 1.65;
+  color: #3a3d42;
+}
+.tutor-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.tutor-hero-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  font-size: .84rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(29, 29, 31, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+.tutor-hero-stats span:nth-child(1) {
+  background: rgba(255, 237, 218, 0.84);
+  border: 1px solid rgba(251, 146, 60, 0.38);
+  color: #8f2d00;
+}
+.tutor-hero-stats span:nth-child(1) strong { color: #d9480f; font-weight: 800; }
+.tutor-hero-stats span:nth-child(2) {
+  background: rgba(224, 249, 238, 0.84);
+  border: 1px solid rgba(16, 185, 129, 0.34);
+  color: #0e5a42;
+}
+.tutor-hero-stats span:nth-child(2) strong { color: #0b7a59; font-weight: 800; }
+.tutor-hero-stats span:nth-child(3) {
+  background: rgba(240, 232, 255, 0.84);
+  border: 1px solid rgba(139, 92, 246, 0.32);
+  color: #4f2694;
+}
+.tutor-hero-cta {
+  margin-top: 6px;
+}
+.tutor-hero-cta .primary {
+  background: linear-gradient(135deg, #ff6b1a 0%, #d93f00 100%);
+  border-radius: 999px;
+  padding: 11px 24px;
+  min-height: 44px;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(217, 63, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.tutor-hero-cta .primary:hover {
+  background: linear-gradient(135deg, #f05a08 0%, #bd3400 100%);
+  transform: translateY(-1px);
+}
+.tutor-hero-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.tutor-hero-visual::before {
+  content: "";
+  position: absolute;
+  width: 78%;
+  aspect-ratio: 1.15;
+  border-radius: 52% 48% 46% 54%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.82), rgba(255, 240, 224, 0.45));
+  box-shadow: 0 12px 32px rgba(29, 29, 31, 0.05);
+  z-index: 0;
+}
+body[data-page="tutors"] .tutor-hero-visual .pagehead-art {
+  position: relative;
+  z-index: 1;
+  width: min(380px, 100%);
+  height: auto;
+  max-height: 235px;
+  object-fit: contain;
+}
+
+/* iOS Frosted Glass Filter Card + Colorful Category Pills */
+.panel.tutor-search {
+  padding: 18px 20px 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: 0 12px 32px rgba(29, 29, 31, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  margin-bottom: 20px;
+}
+.tutor-quick-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(29, 29, 31, 0.07);
+}
+.tutor-cat-chip {
+  min-height: 36px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(29, 29, 31, 0.10);
+  background: #f5f5f7;
+  color: #2c2c30;
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .16s ease, background .16s ease, color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.tutor-cat-chip:hover { transform: translateY(-1px); }
+.tutor-cat-chip[data-id=""] { background: #f2f2f5; border-color: #dcdce2; color: #27272a; }
+.tutor-cat-chip[data-id=""][aria-pressed="true"] {
+  background: linear-gradient(135deg, #2c2c30 0%, #1d1d1f 100%);
+  border-color: #1d1d1f; color: #fff;
+  box-shadow: 0 5px 14px rgba(29, 29, 31, 0.22);
+}
+.tutor-cat-chip[data-id="language"] { background: #eaf3ff; border-color: #bdd8fc; color: #195296; }
+.tutor-cat-chip[data-id="language"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #0a84ff 0%, #005ecb 100%);
+  border-color: #005ecb; color: #fff; box-shadow: 0 5px 14px rgba(10, 132, 255, 0.26);
+}
+.tutor-cat-chip[data-id="math"] { background: #fff1e2; border-color: #f6c99b; color: #9c3800; }
+.tutor-cat-chip[data-id="math"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #ff6b1a 0%, #d93f00 100%);
+  border-color: #d93f00; color: #fff; box-shadow: 0 5px 14px rgba(217, 63, 0, 0.26);
+}
+.tutor-cat-chip[data-id="science"] { background: #e5f8ef; border-color: #aae2c7; color: #0f6646; }
+.tutor-cat-chip[data-id="science"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #10b981 0%, #058359 100%);
+  border-color: #058359; color: #fff; box-shadow: 0 5px 14px rgba(5, 131, 89, 0.26);
+}
+.tutor-cat-chip[data-id="tech"] { background: #f0ebff; border-color: #cfbffa; color: #542bb5; }
+.tutor-cat-chip[data-id="tech"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  border-color: #5b21b6; color: #fff; box-shadow: 0 5px 14px rgba(91, 33, 182, 0.26);
+}
+.tutor-cat-chip[data-id="creative"] { background: #fdebf3; border-color: #f4bed6; color: #9c245a; }
+.tutor-cat-chip[data-id="creative"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  border-color: #be185d; color: #fff; box-shadow: 0 5px 14px rgba(190, 24, 93, 0.26);
+}
+.tutor-cat-chip[data-id="exam"] { background: #fff5d6; border-color: #f3ce7f; color: #8c4b00; }
+.tutor-cat-chip[data-id="exam"][aria-pressed="true"] {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #d97706; color: #fff; box-shadow: 0 5px 14px rgba(217, 119, 6, 0.26);
+}
+
+.tutor-search .tutor-field-row {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 0.95fr 0.95fr 0.95fr auto;
+  gap: 10px;
+  align-items: end;
+}
+.tutor-search input,
+.tutor-search select {
+  border-radius: 14px;
+  background: #f7f7f9;
+  border: 1px solid #e2e2e8;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.tutor-search input:focus,
+.tutor-search select:focus {
+  background: #ffffff;
+  border-color: #ff6b1a;
+  box-shadow: 0 0 0 3.5px rgba(255, 107, 26, 0.16);
+}
+.tutor-submit-cell .primary {
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #ff6b1a 0%, #d93f00 100%);
+  box-shadow: 0 6px 16px rgba(217, 63, 0, 0.25);
+}
+.tutor-search [data-form-error]:empty {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .tutor-search .tutor-field-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tutor-submit-cell { grid-column: 1 / -1; }
+  .tutor-submit-cell .primary { width: 100%; }
+}
+@media (max-width: 720px) {
+  body[data-page="tutors"] .pagehead.tutor-hero-rich {
+    grid-template-columns: 1fr;
+    padding: 22px 20px;
+    gap: 16px;
+  }
+}
+
+/* === iPhone (iOS Liquid Glass) x Naresuan (มอนอ) Highlights: Masthead, Admin/Employer Banners & Stat Cards === */
+
+/* 1. Top-Right Role Account Pill & Sign-Out Pill */
+.mast .account:not([hidden]) {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 15px;
+  border-radius: 999px;
+  font-weight: 700;
+  backdrop-filter: blur(14px) saturate(170%);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  box-shadow:
+    0 4px 14px rgba(29, 29, 31, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.mast .account:not([hidden])::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: #ff6b1a;
+  box-shadow: 0 0 0 3px rgba(255, 107, 26, 0.22);
+  animation: ios-status-pulse 2.6s ease-in-out infinite;
+}
+.mast .account:not([hidden]):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 18px rgba(217, 63, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+body[data-role="employer"] .mast .account:not([hidden]) {
+  background: linear-gradient(135deg, #dffaf0 0%, #bdf0dc 100%);
+  border: 1px solid #7dd9b6;
+  color: #0b573e;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+body[data-role="employer"] .mast .account:not([hidden])::before {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.24);
+}
+body[data-role="admin"] .mast .account:not([hidden]) {
+  background: linear-gradient(135deg, #e2efff 0%, #c4ddff 100%);
+  border: 1px solid #8abbf8;
+  color: #124385;
+  box-shadow: 0 4px 14px rgba(10, 132, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+body[data-role="admin"] .mast .account:not([hidden])::before {
+  background: #0a84ff;
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.24);
+}
+#sign-out:not([hidden]) {
+  border-radius: 999px;
+  padding: 6px 14px;
+  min-height: 38px;
+  border: 1px solid rgba(29, 29, 31, 0.10);
+  background: rgba(255, 255, 255, 0.72);
+  color: #3f4247;
+  font-weight: 600;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .16s ease, box-shadow .18s ease;
+}
+#sign-out:not([hidden]):hover {
+  background: linear-gradient(135deg, #fff0f3 0%, #ffe0e7 100%);
+  border-color: #f8b4c4;
+  color: #be123c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(190, 18, 60, 0.12);
+}
+
+/* 2. Luminous iPhone Mesh Gradient Page Banners (Admin, Employer & All Roles) */
+body[data-role] .pagehead:not(.tutor-hero-rich) {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  padding: 22px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 14px 34px rgba(29, 29, 31, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+body[data-role] .pagehead:not(.tutor-hero-rich)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 22%, rgba(255, 255, 255, 0.55) 48%, transparent 74%);
+  transform: translateX(-115%);
+  transition: transform .75s cubic-bezier(.22, 1, .36, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+body[data-role] .pagehead:not(.tutor-hero-rich):hover::before {
+  transform: translateX(115%);
+}
+body[data-role="admin"] .pagehead:not(.tutor-hero-rich) {
+  background:
+    radial-gradient(420px 240px at 8% 12%, rgba(10, 132, 255, 0.22), transparent 65%),
+    radial-gradient(380px 240px at 56% 94%, rgba(168, 85, 247, 0.18), transparent 64%),
+    radial-gradient(380px 240px at 94% 18%, rgba(255, 138, 56, 0.22), transparent 64%),
+    linear-gradient(135deg, #e8f2ff 0%, #f4efff 52%, #fff3e8 100%);
+}
+body[data-role="admin"] .pagehead:not(.tutor-hero-rich) h1 {
+  background: linear-gradient(135deg, #0d3b7a 0%, #1d5fd1 55%, #6d28d9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+body[data-role="employer"] .pagehead:not(.tutor-hero-rich) {
+  background:
+    radial-gradient(420px 240px at 10% 10%, rgba(16, 185, 129, 0.24), transparent 64%),
+    radial-gradient(380px 240px at 62% 95%, rgba(255, 146, 56, 0.22), transparent 62%),
+    radial-gradient(360px 220px at 92% 16%, rgba(56, 189, 248, 0.18), transparent 64%),
+    linear-gradient(135deg, #dff9ee 0%, #eefcf7 50%, #fff4e6 100%);
+}
+body[data-role="employer"] .pagehead:not(.tutor-hero-rich) h1 {
+  background: linear-gradient(135deg, #0b513b 0%, #0d9488 60%, #c2410c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+body[data-role] .pagehead.pagehead-illustrated:not(.tutor-hero-rich) .pagehead-art {
+  position: relative;
+  z-index: 2;
+  padding: 6px;
+  border-radius: 22px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.25) 70%);
+  box-shadow: 0 8px 20px rgba(29, 29, 31, 0.08);
+  filter: drop-shadow(0 8px 14px rgba(29, 29, 31, 0.12));
+  animation: ios-mascot-bob 4.8s ease-in-out infinite;
+}
+
+/* 3. Workspace Toolbar (Employer Switcher + Create Post CTA) */
+.workspace-tools {
+  padding: 14px 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 24px rgba(29, 29, 31, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  margin-bottom: 16px;
+}
+.workspace-tools select {
+  border-radius: 14px;
+  background: #f6f6f9;
+  border: 1px solid #e0e0e7;
+  font-weight: 600;
+}
+.workspace-tools .primary {
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff6b1a 0%, #d93f00 100%);
+  box-shadow: 0 7px 18px rgba(217, 63, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* 4. Vibrant Floating iOS Highlight Stat Cards (.workspace-stats) */
+.workspace-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 14px !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin-bottom: 20px !important;
+}
+.workspace-stats > div,
+.workspace-stats:not(.income-stats) > div:nth-child(n) {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px !important;
+  padding: 18px 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.88) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  box-shadow:
+    0 10px 26px rgba(29, 29, 31, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  transition: transform .22s cubic-bezier(.22, 1, .36, 1), box-shadow .22s ease;
+}
+.workspace-stats > div::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
+  transform: translateX(-120%);
+  transition: transform .65s cubic-bezier(.22, 1, .36, 1);
+  pointer-events: none;
+}
+.workspace-stats > div:hover {
+  transform: translateY(-4px);
+}
+.workspace-stats > div:hover::after {
+  transform: translateX(120%);
+}
+.workspace-stats > div strong,
+.workspace-stats > div .stat-value {
+  font-size: 1.95rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Card 1: Naresuan Orange Highlight */
+.workspace-stats > div:nth-child(4n+1) {
+  background: linear-gradient(145deg, #fff1e2 0%, #fffaf5 65%, #ffffff 100%) !important;
+  border-top: 4px solid #ff6b1a !important;
+}
+.workspace-stats > div:nth-child(4n+1):hover {
+  box-shadow: 0 14px 30px rgba(255, 107, 26, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.workspace-stats > div:nth-child(4n+1) strong { color: #c83e00; }
+
+/* Card 2: iOS Emerald-Mint Highlight */
+.workspace-stats > div:nth-child(4n+2) {
+  background: linear-gradient(145deg, #e2faef 0%, #f3fdf8 65%, #ffffff 100%) !important;
+  border-top: 4px solid #10b981 !important;
+}
+.workspace-stats > div:nth-child(4n+2):hover {
+  box-shadow: 0 14px 30px rgba(16, 185, 129, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.workspace-stats > div:nth-child(4n+2) strong { color: #0b6e4f; }
+
+/* Card 3: Honey-Amber Highlight */
+.workspace-stats > div:nth-child(4n+3) {
+  background: linear-gradient(145deg, #fff4d4 0%, #fffbf0 65%, #ffffff 100%) !important;
+  border-top: 4px solid #f59e0b !important;
+}
+.workspace-stats > div:nth-child(4n+3):hover {
+  box-shadow: 0 14px 30px rgba(245, 158, 11, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.workspace-stats > div:nth-child(4n+3) strong { color: #b45309; }
+
+/* Card 4: Salao Violet Highlight */
+.workspace-stats > div:nth-child(4n+4) {
+  background: linear-gradient(145deg, #f1ebff 0%, #f9f6ff 65%, #ffffff 100%) !important;
+  border-top: 4px solid #7c3aed !important;
+}
+.workspace-stats > div:nth-child(4n+4):hover {
+  box-shadow: 0 14px 30px rgba(124, 58, 237, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.workspace-stats > div:nth-child(4n+4) strong { color: #5b21b6; }
+
+@keyframes ios-status-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.18); opacity: 0.85; }
+}
+@keyframes ios-mascot-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mast .account::before,
+  body[data-role] .pagehead.pagehead-illustrated .pagehead-art { animation: none; }
+  body[data-role] .pagehead::before,
+  .workspace-stats > div::after { display: none; }
+}
+
+/* === Site-Wide iPhone (iOS Liquid Glass) x Naresuan (มอนอ) Design System === */
+
+/* 1. Student Page Banners: Luminous Mesh Gradients per Page */
+body[data-role="student"] .pagehead[data-page="home"] {
+  background:
+    radial-gradient(440px 240px at 8% 12%, rgba(255, 132, 46, 0.25), transparent 64%),
+    radial-gradient(380px 240px at 56% 96%, rgba(196, 138, 255, 0.20), transparent 64%),
+    radial-gradient(380px 240px at 94% 18%, rgba(56, 211, 179, 0.22), transparent 64%),
+    linear-gradient(135deg, #fff3e4 0%, #faf3ff 54%, #ebfaf3 100%);
+}
+body[data-role="student"] .pagehead[data-page="home"] h1 {
+  background: linear-gradient(135deg, #8f2d00 0%, #d9480f 55%, #6d28d9 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body[data-role="student"] .pagehead[data-page="schedule"] {
+  background:
+    radial-gradient(420px 240px at 10% 10%, rgba(10, 132, 255, 0.22), transparent 64%),
+    radial-gradient(380px 240px at 58% 96%, rgba(168, 85, 247, 0.18), transparent 64%),
+    radial-gradient(360px 220px at 92% 18%, rgba(52, 211, 153, 0.22), transparent 64%),
+    linear-gradient(135deg, #e7f2ff 0%, #f2efff 54%, #e9faf3 100%);
+}
+body[data-role="student"] .pagehead[data-page="schedule"] h1 {
+  background: linear-gradient(135deg, #10428a 0%, #0a74da 58%, #6d28d9 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body[data-role="student"] .pagehead[data-page="applications"] {
+  background:
+    radial-gradient(420px 240px at 10% 10%, rgba(139, 92, 246, 0.23), transparent 64%),
+    radial-gradient(380px 240px at 58% 96%, rgba(236, 72, 153, 0.17), transparent 64%),
+    radial-gradient(360px 220px at 92% 18%, rgba(255, 146, 56, 0.20), transparent 64%),
+    linear-gradient(135deg, #f2ecff 0%, #fdf0f7 54%, #fff4e8 100%);
+}
+body[data-role="student"] .pagehead[data-page="applications"] h1 {
+  background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 58%, #c2410c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body[data-role="student"] .pagehead[data-page="work"] {
+  background:
+    radial-gradient(420px 240px at 10% 10%, rgba(16, 185, 129, 0.24), transparent 64%),
+    radial-gradient(380px 240px at 58% 96%, rgba(245, 158, 11, 0.20), transparent 64%),
+    radial-gradient(360px 220px at 92% 18%, rgba(56, 189, 248, 0.18), transparent 64%),
+    linear-gradient(135deg, #e2faef 0%, #fff8e6 56%, #edf7ff 100%);
+}
+body[data-role="student"] .pagehead[data-page="work"] h1 {
+  background: linear-gradient(135deg, #0b5a40 0%, #0d9488 58%, #b45309 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body[data-role="student"] .pagehead[data-page="profile"] {
+  background:
+    radial-gradient(420px 240px at 10% 10%, rgba(236, 72, 153, 0.20), transparent 64%),
+    radial-gradient(380px 240px at 58% 96%, rgba(255, 138, 56, 0.22), transparent 64%),
+    radial-gradient(360px 220px at 92% 18%, rgba(168, 85, 247, 0.18), transparent 64%),
+    linear-gradient(135deg, #fdecf3 0%, #fff3e6 54%, #f4eeff 100%);
+}
+body[data-role="student"] .pagehead[data-page="profile"] h1 {
+  background: linear-gradient(135deg, #881337 0%, #db2777 54%, #c2410c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body[data-role="student"] .pagehead[data-page="reports"] {
+  background:
+    radial-gradient(420px 240px at 10% 10%, rgba(245, 158, 11, 0.24), transparent 64%),
+    radial-gradient(380px 240px at 58% 96%, rgba(255, 107, 26, 0.20), transparent 64%),
+    radial-gradient(360px 220px at 92% 18%, rgba(59, 130, 246, 0.16), transparent 64%),
+    linear-gradient(135deg, #fff5d6 0%, #fff0e2 54%, #eef5ff 100%);
+}
+body[data-role="student"] .pagehead[data-page="reports"] h1 {
+  background: linear-gradient(135deg, #78350f 0%, #d97706 55%, #c2410c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* 2. Landing Hero & Recommendations Showcase: Matching iOS Glass-Mesh */
+.landing-hero {
+  background:
+    radial-gradient(500px 300px at 10% 14%, rgba(255, 132, 46, 0.26), transparent 64%),
+    radial-gradient(420px 280px at 54% 96%, rgba(196, 138, 255, 0.20), transparent 64%),
+    radial-gradient(460px 300px at 92% 24%, rgba(56, 211, 179, 0.24), transparent 66%),
+    linear-gradient(135deg, #fff3e4 0%, #fbf5ff 54%, #e9faf3 100%);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  box-shadow:
+    0 20px 46px rgba(29, 29, 31, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+.landing-actions .primary {
+  border-radius: 999px;
+  padding: 13px 26px;
+  background: linear-gradient(135deg, #ff6b1a 0%, #d93f00 100%);
+  box-shadow: 0 8px 20px rgba(217, 63, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.recommendations {
+  background:
+    radial-gradient(480px 260px at 8% 8%, rgba(255, 146, 56, 0.16), transparent 62%),
+    radial-gradient(440px 260px at 94% 90%, rgba(168, 85, 247, 0.12), transparent 62%),
+    radial-gradient(420px 260px at 52% 100%, rgba(45, 212, 191, 0.14), transparent 64%),
+    linear-gradient(155deg, rgba(255, 248, 240, 0.92) 0%, rgba(255, 255, 255, 0.86) 55%, rgba(240, 252, 247, 0.92) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 16px 38px rgba(29, 29, 31, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* 3. iOS Frosted Glass Panels, Rows & Interactive Buttons */
+.panel {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow:
+    0 10px 28px rgba(29, 29, 31, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.row {
+  border-radius: 14px;
+  padding-inline: 12px;
+  margin-inline: -12px;
+  transition: background .18s ease, transform .18s ease;
+}
+.row:hover {
+  background: linear-gradient(90deg, rgba(255, 244, 232, 0.65) 0%, rgba(244, 247, 255, 0.55) 100%);
+}
+.secondary {
+  border-radius: 999px;
+  border: 1px solid rgba(29, 29, 31, 0.14);
+  background: rgba(255, 255, 255, 0.9);
+  color: #27272a;
+  font-weight: 600;
+  padding: 7px 16px;
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .16s ease, box-shadow .18s ease;
+}
+.secondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #fff3e6 0%, #ffe6cc 100%);
+  border-color: #f3b883;
+  color: #9a3400;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 63, 0, 0.12);
+}
+
+/* 4. Elevated Job Cards, Landing Cards & Tutor Cards */
+.job-card[data-kind],
+.landing-job[data-kind],
+.tutor-card {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 8px 24px rgba(29, 29, 31, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.job-card[data-kind]:not(.is-recommended):hover,
+.landing-job[data-kind]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(29, 29, 31, 0.10);
+}
+
+/* 5. Sleek iOS Inputs, Search Boxes & Schedule Tabs */
+#all-jobs .search input,
+.panel input:not([type="checkbox"]):not([type="radio"]),
+.panel select,
+.panel textarea {
+  border-radius: 14px;
+  background: #f6f6f9;
+  border: 1px solid #e1e1e8;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+#all-jobs .search input:focus,
+.panel input:focus,
+.panel select:focus,
+.panel textarea:focus {
+  background: #ffffff;
+  border-color: #ff6b1a;
+  box-shadow: 0 0 0 3.5px rgba(255, 107, 26, 0.16);
+}
+#all-jobs .search .primary {
+  border-radius: 999px;
+  padding-inline: 22px;
+}
+.schedule-tabs button {
+  border-radius: 999px;
+  font-weight: 600;
+  transition: background .16s ease, color .16s ease, box-shadow .16s ease;
+}
+.schedule-tabs button[aria-pressed="true"] {
+  background: linear-gradient(135deg, #0a84ff 0%, #4f46e5 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 5px 14px rgba(10, 132, 255, 0.26);
+}

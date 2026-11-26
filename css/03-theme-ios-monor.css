@@ -1,0 +1,578 @@
+/* === HappiU Final Theme: Calm Anti-AI Craft + iPhone x มอนอ Preset === */
+
+/* === Calm, Human-Crafted Editorial UX/UI (Anti-AI Slop Pass) === */
+
+/* Subtle Naresuan brand top hairline instead of 4-color rainbow stripe */
+.mast::before {
+  height: 2.5px;
+  background: linear-gradient(90deg, #ea580c 0%, #f97316 55%, #fb923c 100%);
+  opacity: 0.88;
+}
+
+/* Calm, breathable "งานแนะนำสำหรับคุณ" container (no rainbow mesh behind cards) */
+.recommendations {
+  background: #faf8f5 !important;
+  border: 1px solid #ece8e1 !important;
+  border-radius: 22px;
+  padding: 20px 22px 24px;
+  box-shadow: none !important;
+}
+.recommendations > .section-head {
+  margin-bottom: 16px;
+}
+.recommendations > .section-head h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1c1917;
+  letter-spacing: -.01em;
+}
+.recommendations > .section-head .icon {
+  color: #c2410c;
+}
+
+/* Unified, calm white recommended job cards — zero rainbow borders or photo stripes */
+.job-card.is-recommended,
+.job-card.is-recommended[data-kind="campus"],
+.job-card.is-recommended[data-kind="near"],
+.job-card.is-recommended[data-kind="online"] {
+  background: #ffffff !important;
+  border: 1px solid #e7e4de !important;
+  border-radius: 18px !important;
+  box-shadow: 0 2px 10px rgba(24, 24, 27, 0.035) !important;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .job-card.is-recommended:hover,
+  .job-card.is-recommended[data-kind]:hover {
+    transform: translateY(-3px) !important;
+    border-color: #d6d1c7 !important;
+    box-shadow: 0 12px 26px rgba(24, 24, 27, 0.075) !important;
+  }
+}
+.job-card.is-recommended[data-kind] .job-card-photo {
+  border-bottom: 1px solid #f0ede8 !important;
+  height: 168px;
+}
+
+/* Crisp, human-scannable header inside card */
+.is-recommended .job-card-top {
+  padding: 16px 18px 12px;
+  gap: 11px;
+  align-items: center;
+}
+.is-recommended .job-emblem {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  border: 1px solid #efece6;
+  background: #faf9f7;
+}
+.is-recommended .job-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #18181b;
+  line-height: 1.4;
+}
+.is-recommended .job-card-top .helper {
+  margin-top: 2px;
+  font-size: .82rem;
+  color: #71717a;
+}
+
+/* Calm, neutral Match Summary inset (consistent across all 3 cards) */
+.is-recommended .recommendation-summary,
+.is-recommended[data-kind="campus"] .recommendation-summary,
+.is-recommended[data-kind="near"] .recommendation-summary,
+.is-recommended[data-kind="online"] .recommendation-summary {
+  background: #f8f7f4 !important;
+  border: 1px solid #efece6 !important;
+  border-radius: 12px;
+  margin: 0 18px;
+  padding: 11px 13px;
+  color: #52525b !important;
+}
+.is-recommended .match-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+.is-recommended .match-heading > span,
+.is-recommended[data-kind] .match-heading > span {
+  font-size: .78rem;
+  font-weight: 500;
+  color: #6b7280 !important;
+}
+.is-recommended .match-score,
+.is-recommended[data-kind] .match-score {
+  font-size: 1.12rem !important;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  color: #c2410c !important;
+}
+.is-recommended .recommendation-summary[data-tier="high"] .match-score {
+  color: #15803d !important;
+}
+.is-recommended .match-score small {
+  font-size: .78rem;
+  font-weight: 600;
+  margin-inline-start: 1px;
+}
+.match-meter {
+  height: 3.5px;
+  width: 100%;
+  border-radius: 999px;
+  background: #e7e4dd;
+  overflow: hidden;
+  margin-bottom: 9px;
+}
+.match-meter > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #ea580c;
+}
+.recommendation-summary[data-tier="high"] .match-meter > span {
+  background: #16a34a;
+}
+.is-recommended .recommendation-summary ul {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.55;
+  color: #52525b;
+}
+.is-recommended .recommendation-summary li {
+  margin-top: 3px;
+  padding-inline-start: 12px;
+}
+.is-recommended .recommendation-summary li::before {
+  content: "·";
+  font-size: 1.15em;
+  color: #a1a1aa;
+  opacity: 1;
+}
+
+/* Calm, readable facts: Airbnb-style dark charcoal pay + clean subtle meta */
+.is-recommended .job-card-facts {
+  padding: 14px 18px 12px;
+  gap: 6px;
+}
+.is-recommended .job-card-facts .pay {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #18181b !important;
+  margin-bottom: 2px;
+}
+.is-recommended .job-card-facts .job-meta {
+  font-size: .84rem;
+  color: #52525b;
+  line-height: 1.55;
+}
+.is-recommended .job-location-button {
+  color: #52525b;
+  text-decoration: none;
+}
+.is-recommended .job-location-button:hover {
+  color: #18181b;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Unified, restrained footer CTA (no 3-color pastel blob buttons) */
+.is-recommended .job-card-footer {
+  margin: auto 18px 0;
+  padding: 10px 0 12px;
+  border-top: 1px solid #f0ede8;
+  min-height: 52px;
+}
+.is-recommended .job-card-footer .text-button,
+.is-recommended[data-kind="campus"] .job-card-footer .text-button,
+.is-recommended[data-kind="near"] .job-card-footer .text-button,
+.is-recommended[data-kind="online"] .job-card-footer .text-button {
+  background: transparent !important;
+  color: #b43c08 !important;
+  font-weight: 600;
+  font-size: .88rem;
+  padding: 7px 12px;
+  min-height: 36px;
+  border-radius: 10px;
+}
+.is-recommended .job-card-footer .text-button:hover,
+.is-recommended[data-kind] .job-card-footer .text-button:hover {
+  background: #fff3eb !important;
+  color: #9a3412 !important;
+}
+
+/* Calm All-Jobs cards too (no heavy rainbow top strips) */
+.job-card[data-kind]:not(.is-recommended),
+.job-card[data-kind="campus"]:not(.is-recommended),
+.job-card[data-kind="near"]:not(.is-recommended),
+.job-card[data-kind="online"]:not(.is-recommended) {
+  border: 1px solid #e7e4de !important;
+  border-top: 1px solid #e7e4de !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(24, 24, 27, 0.03) !important;
+}
+.job-card[data-kind]:not(.is-recommended):hover {
+  border-color: #d6d1c7 !important;
+  box-shadow: 0 10px 22px rgba(24, 24, 27, 0.07) !important;
+}
+.job-card .job-card-facts .pay {
+  color: #18181b;
+}
+
+/* === Site-Wide Calm Craft Completion: Sidebar, Chips, Tutors, Landing & Dashboards === */
+
+/* 1. Calm, Disciplined Sidebar Navigation (No 7-Color Rainbow Icons) */
+body[data-role] #nav .nav-link {
+  color: #52525b;
+  border-radius: 12px;
+  padding: 7px 11px;
+}
+body[data-role] #nav .nav-link[data-route] .nav-icon {
+  background: #f3f1ec;
+  color: #57534e;
+  border-radius: 9px;
+}
+body[data-role] #nav .nav-link:hover:not([aria-current="page"]) {
+  background: #f5f3ef;
+  color: #18181b;
+}
+body[data-role] #nav .nav-link:hover:not([aria-current="page"]) .nav-icon {
+  background: #ebe8e1;
+  color: #18181b;
+}
+body[data-role="student"] #nav .nav-link[aria-current="page"] {
+  background: #fff3e8;
+  color: #9a3412;
+  border: 1px solid #fbd7b8;
+  box-shadow: 0 2px 8px rgba(194, 65, 12, 0.08);
+}
+body[data-role="student"] #nav .nav-link[aria-current="page"] .nav-icon {
+  background: #ea580c;
+  color: #ffffff;
+  box-shadow: none;
+}
+body[data-role="employer"] #nav .nav-link[aria-current="page"] {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #bbf7d0;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.08);
+}
+body[data-role="employer"] #nav .nav-link[aria-current="page"] .nav-icon {
+  background: #0d9488;
+  color: #ffffff;
+  box-shadow: none;
+}
+body[data-role="admin"] #nav .nav-link[aria-current="page"] {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+body[data-role="admin"] #nav .nav-link[aria-current="page"] .nav-icon {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+/* 2. Calm, Unified Filter Chips (Airbnb / Apple Style — Zero Rainbow Pills) */
+.landing-pin-filters .chip[data-action][data-id],
+.filters .chip[data-action][data-id],
+.tutor-cat-chip[data-id] {
+  background: #ffffff !important;
+  border: 1px solid #e4e1da !important;
+  color: #3f3f46 !important;
+  box-shadow: none !important;
+  font-weight: 500;
+}
+.landing-pin-filters .chip[data-action][data-id]:hover,
+.filters .chip[data-action][data-id]:hover,
+.tutor-cat-chip[data-id]:hover {
+  background: #f5f3ef !important;
+  border-color: #d4d0c7 !important;
+  color: #18181b !important;
+}
+.landing-pin-filters .chip[data-action][data-id][aria-pressed="true"],
+.filters .chip[data-action][data-id][aria-pressed="true"],
+.tutor-cat-chip[data-id][aria-pressed="true"] {
+  background: #18181b !important;
+  border-color: #18181b !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(24, 24, 27, 0.14) !important;
+}
+.period-choice {
+  background: #ffffff;
+  border-color: #e4e1da;
+  color: #52525b;
+  border-radius: 999px;
+}
+.period-choice[aria-pressed="true"] {
+  background: #fff3eb !important;
+  border-color: #f3b587 !important;
+  color: #9a3412 !important;
+}
+
+/* 3. Calm Frosted Stat Pills inside Tutors Hero & Clean Tutor Cards */
+.tutor-hero-stats span:nth-child(n) {
+  background: rgba(255, 255, 255, 0.84) !important;
+  border: 1px solid rgba(255, 255, 255, 0.94) !important;
+  color: #3f3f46 !important;
+  box-shadow: 0 2px 8px rgba(24, 24, 27, 0.04) !important;
+}
+.tutor-hero-stats span:nth-child(n) strong {
+  color: #18181b !important;
+}
+.tutor-card {
+  border: 1px solid #e7e4de !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(24, 24, 27, 0.035) !important;
+}
+.tutor-card:hover {
+  border-color: #d6d1c7 !important;
+  box-shadow: 0 12px 26px rgba(24, 24, 27, 0.075) !important;
+}
+
+/* 4. Calm Landing Job Cards (Unified Neutral White, Zero Rainbow Tops) */
+.landing-jobs-grid .landing-job[data-kind],
+.landing-list .landing-job[data-kind] {
+  border: 1px solid #e7e4de !important;
+  border-top: 1px solid #e7e4de !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(24, 24, 27, 0.035) !important;
+}
+.landing-job-body .landing-job-pay {
+  color: #18181b;
+}
+
+/* 5. Executive-Calm Employer & Admin Stat Cards (Clean White + Subtle Accent Hairline) */
+.workspace-stats > div:nth-child(n) {
+  background: #ffffff !important;
+  border: 1px solid #e7e4de !important;
+  border-radius: 18px !important;
+  box-shadow: 0 2px 10px rgba(24, 24, 27, 0.035) !important;
+}
+.workspace-stats > div:nth-child(4n+1) { border-top: 3px solid #ea580c !important; }
+.workspace-stats > div:nth-child(4n+2) { border-top: 3px solid #0d9488 !important; }
+.workspace-stats > div:nth-child(4n+3) { border-top: 3px solid #d97706 !important; }
+.workspace-stats > div:nth-child(4n+4) { border-top: 3px solid #6366f1 !important; }
+.workspace-stats > div:nth-child(n) strong {
+  color: #18181b !important;
+}
+.workspace-stats > div:nth-child(n):hover {
+  border-color: #d6d1c7 !important;
+  box-shadow: 0 10px 24px rgba(24, 24, 27, 0.07) !important;
+}
+
+/* 6. Clean Panels, Rows, Dialogs & Schedule Tabs */
+.panel {
+  background: #ffffff;
+  border: 1px solid #e7e4de;
+  border-radius: 18px;
+  box-shadow: 0 2px 10px rgba(24, 24, 27, 0.03);
+}
+.row:hover {
+  background: #faf9f6;
+}
+dialog {
+  border-radius: 22px;
+  border: 1px solid #e7e4de;
+  box-shadow: 0 24px 64px rgba(24, 24, 27, 0.16);
+}
+.schedule-tabs button[aria-pressed="true"] {
+  background: #18181b;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(24, 24, 27, 0.16);
+}
+
+/* === Applied Playground Preset #2: iPhone × มอนอ (Liquid Glass + Naresuan Orange, Salao Lavender & iOS Mint) === */
+body {
+  background:
+    radial-gradient(880px 420px at 8% -4%, rgba(255, 132, 46, 0.18), transparent 62%),
+    radial-gradient(760px 380px at 54% 4%, rgba(196, 138, 255, 0.13), transparent 60%),
+    radial-gradient(760px 380px at 94% 2%, rgba(56, 211, 179, 0.15), transparent 60%),
+    linear-gradient(180deg, #fff8f2 0%, #fcfbfe 440px, #f9fafb 100%);
+}
+.mast {
+  background: rgba(255, 253, 251, 0.86);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-bottom: 1px solid rgba(240, 224, 212, 0.85);
+}
+.mast::before {
+  height: 3px;
+  background: linear-gradient(90deg, #ff7a18 0%, #f97316 36%, #c084fc 70%, #2dd4bf 100%);
+  opacity: 0.92;
+}
+.primary:not(:disabled) {
+  background: linear-gradient(135deg, #ff7a1a 0%, #ea580c 100%);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+.primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f96806 0%, #c2410c 100%);
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+body[data-role] .pagehead:not(.tutor-hero-rich),
+.landing-hero {
+  background:
+    radial-gradient(460px 260px at 8% 12%, rgba(255, 132, 46, 0.25), transparent 64%),
+    radial-gradient(420px 260px at 54% 94%, rgba(196, 138, 255, 0.21), transparent 64%),
+    radial-gradient(440px 260px at 94% 18%, rgba(56, 211, 179, 0.23), transparent 64%),
+    linear-gradient(135deg, #fff5ea 0%, #f8f3ff 52%, #ebfbf5 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow:
+    0 14px 34px rgba(29, 29, 31, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94) !important;
+}
+.recommendations {
+  background:
+    radial-gradient(460px 240px at 8% 6%, rgba(255, 132, 46, 0.12), transparent 62%),
+    radial-gradient(420px 240px at 54% 96%, rgba(196, 138, 255, 0.10), transparent 62%),
+    radial-gradient(420px 240px at 94% 12%, rgba(56, 211, 179, 0.11), transparent 62%),
+    linear-gradient(155deg, rgba(255, 251, 247, 0.88) 0%, rgba(252, 250, 255, 0.86) 54%, rgba(246, 253, 250, 0.88) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: 0 10px 28px rgba(29, 29, 31, 0.045), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+.job-card.is-recommended,
+.job-card[data-kind],
+.tutor-card,
+.landing-job[data-kind],
+.panel,
+.workspace-stats > div:nth-child(n) {
+  background: rgba(255, 255, 255, 0.93) !important;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+.is-recommended .match-score { color: #f97316 !important; }
+.match-meter > span { background: #f97316; }
+.is-recommended .recommendation-summary[data-tier="high"] .match-score { color: #16a34a !important; }
+.recommendation-summary[data-tier="high"] .match-meter > span { background: #16a34a; }
+.is-recommended .job-card-footer .text-button { color: #ea580c !important; }
+.is-recommended .job-card-footer .text-button:hover { background: #fff3e8 !important; color: #c2410c !important; }
+body[data-role="student"] #nav .nav-link[aria-current="page"] {
+  background: linear-gradient(135deg, rgba(255, 241, 226, 0.95) 0%, rgba(255, 231, 206, 0.92) 100%);
+  border-color: rgba(249, 115, 22, 0.28);
+  color: #9a3412;
+}
+body[data-role="student"] #nav .nav-link[aria-current="page"] .nav-icon {
+  background: linear-gradient(135deg, #ff7a1a 0%, #ea580c 100%);
+}
+
+/* Crisp, Balanced Top-Right Account Pill & Sign-Out Cluster */
+.mast .bar {
+  gap: 8px;
+}
+.mast .account:not([hidden]) {
+  height: 40px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  gap: 8px;
+  font-size: .86rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(24, 24, 27, 0.05);
+}
+/* Remove awkward floating dot on student avatar & guest login pills */
+body:not([data-role]) .mast .account::before,
+body[data-role="student"] .mast .account::before,
+.mast .account:has(img)::before,
+.mast .account:has(.avatar)::before {
+  display: none !important;
+}
+/* Sleek flush-left avatar pill for signed-in student */
+body[data-role="student"] .mast .account:not([hidden]) {
+  padding: 3px 14px 3px 4px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #e6e1d8;
+  color: #18181b;
+  box-shadow: 0 2px 8px rgba(24, 24, 27, 0.05);
+}
+body[data-role="student"] .mast .account:not([hidden]):hover {
+  background: #fff7f0;
+  border-color: #f4be92;
+  color: #9a3412;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.12);
+}
+body[data-role="student"] .mast .account .avatar,
+body[data-role="student"] .mast .account img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px #ffffff, 0 1px 3px rgba(24, 24, 27, 0.12);
+  flex: none;
+}
+/* Subtle crisp dot only for Employer / Admin text pills */
+body[data-role="employer"] .mast .account:not([hidden])::before,
+body[data-role="admin"] .mast .account:not([hidden])::before {
+  width: 6.5px;
+  height: 6.5px;
+  animation: none;
+  box-shadow: none;
+}
+#sign-out:not([hidden]) {
+  height: 40px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: .84rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid #e6e2db;
+  background: rgba(255, 255, 255, 0.88);
+  color: #52525b;
+  box-shadow: none;
+}
+#sign-out:not([hidden]):hover {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #be123c;
+  box-shadow: 0 2px 8px rgba(190, 18, 60, 0.10);
+}
+@media (max-width: 560px) {
+  .mast .bar {
+    gap: 6px;
+    padding-inline: 12px;
+  }
+  .mast .university span {
+    display: none;
+  }
+  .mast .university img {
+    width: 26px;
+    height: 26px;
+  }
+  .mast .account:not([hidden]),
+  body[data-role="student"] .mast .account:not([hidden]) {
+    height: 34px;
+    min-height: 34px;
+    padding: 2px 10px 2px 3px;
+    font-size: .78rem;
+    gap: 6px;
+    max-width: 128px;
+  }
+  body[data-role="student"] .mast .account .avatar,
+  body[data-role="student"] .mast .account img,
+  body[data-role="student"] .mast .account span.student-avatar {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: .66rem !important;
+  }
+  #sign-out:not([hidden]) {
+    height: 34px;
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: .76rem;
+  }
+}

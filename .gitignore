@@ -1,0 +1,24 @@
+# OS & Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs & temporary files
+*.log
+*.tmp
+*.bak
+
+# Local tool & agent folders
+.agents/
+.aws/
+.codex/
+node_modules/
+
+# Large local reference / raw asset archives (excluded for clean Git repo)
+assets/
+references/
+archive/
