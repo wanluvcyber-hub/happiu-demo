@@ -64,7 +64,7 @@ function createApp({ dbPath } = {}) {
 
 if (require.main === module) {
   const PORT = Number(process.env.PORT || 8081);
-  const HOST = process.env.HOST || "127.0.0.1";
+  const HOST = process.env.HOST || (process.env.RENDER || process.env.PORT ? "0.0.0.0" : "127.0.0.1");
   const app = createApp();
   app.listen(PORT, HOST, () => {
     console.log(`HappiU Full-Stack Server running at http://${HOST}:${PORT}`);
