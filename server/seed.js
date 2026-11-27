@@ -258,7 +258,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-baitong-mart", "baitong", "demo-mart-cashier", "campusmart", "NEW-07",
       "accepted", "hired", "ทำงานคล่องแคล่วและสื่อสารกับลูกค้าดีมาก", null,
-      JSON.stringify({ nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
+      JSON.stringify({ name: "ใบตอง วัฒนกิจ", nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
       "", "paid", isoAgo(72), isoAgo(69), 390, "REF-MART-2026-014",
       JSON.stringify({ rating: 5, comment: "พี่ๆ ที่ร้านใจดี สอนงานละเอียด จ่ายค่าจ้างตรงเวลาทุกสัปดาห์ค่ะ", at: isoAgo(48) }),
       JSON.stringify({ rating: 5, comment: "ใบตองมาตรงเวลา คิดเงินแม่นยำ ยิ้มแย้มแจ่มใส แนะนำเลยครับ", at: isoAgo(47) }),
@@ -268,7 +268,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-baitong-studio", "baitong", "demo-video-captions", "campusstudio", "NEW-08",
       "offered", "training", "ผ่านการทดลองทำซับไตเติลแล้ว ส่งข้อเสนอเวลาทำงานให้พิจารณานะครับ", null,
-      JSON.stringify({ nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
+      JSON.stringify({ name: "ใบตอง วัฒนกิจ", nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
       "portfolio-baitong-captions.pdf", null, null, null, 0, "",
       null, null, null, "", isoAgo(60), isoAgo(8)
     ],
@@ -276,7 +276,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-baitong-copy", "baitong", "demo-copyshop-binding", "copyshop", "PB-01",
       "resigned", "hired", "ขอบคุณที่ช่วยงานช่วงเปิดเทอมครับ", null,
-      JSON.stringify({ nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
+      JSON.stringify({ name: "ใบตอง วัฒนกิจ", nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
       "", "paid", isoAgo(240), isoAgo(237), 180, "REF-COPY-2026-008",
       JSON.stringify({ rating: 4, comment: "งานเป็นระบบดีค่ะ ได้เรียนรู้เรื่องเข้าเล่มเอกสาร", at: isoAgo(190) }),
       JSON.stringify({ rating: 5, comment: "ตั้งใจทำงานดีมากครับ", at: isoAgo(188) }),
@@ -286,7 +286,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-baitong-pet", "baitong", "demo-pet-supplies", "petcorner", null,
       "declined", "review", "ขอบคุณที่สนใจครับ ตอนนี้ทางร้านรับผู้สมัครครบจำนวนแล้ว", null,
-      JSON.stringify({ nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
+      JSON.stringify({ name: "ใบตอง วัฒนกิจ", nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
       "", null, null, null, 0, "",
       null, null, null, "", isoAgo(140), isoAgo(120)
     ],
@@ -294,7 +294,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-thanwa-it", "thanwa", "demo-it-support", "library", "IT-01",
       "accepted", "hired", "รับเข้าทำงานทีมสนับสนุนไอทีห้องสมุด", null,
-      JSON.stringify({ nick: "ธันวา", faculty: "คณะวิทยาศาสตร์", major: "วิทยาการคอมพิวเตอร์", year: 3 }),
+      JSON.stringify({ name: "ธันวา พราวพงศ์", nick: "ธันวา", faculty: "คณะวิทยาศาสตร์", major: "วิทยาการคอมพิวเตอร์", year: 3 }),
       "resume-thanwa.pdf", "checked_in", isoAgo(2), null, 0, "",
       null, null, null, "", isoAgo(120), isoAgo(2)
     ],
@@ -302,7 +302,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-panpan-event", "panpan", "demo-event-photo", "campusstudio", null,
       "pending", "review", "", null,
-      JSON.stringify({ nick: "ปันปัน", faculty: "คณะวิศวกรรมศาสตร์", major: "วิศวกรรมคอมพิวเตอร์", year: 3 }),
+      JSON.stringify({ name: "ปันปัน ศิริวัฒน์", nick: "ปันปัน", faculty: "คณะวิศวกรรมศาสตร์", major: "วิศวกรรมคอมพิวเตอร์", year: 3 }),
       "portfolio-photo-panpan.pdf", null, null, null, 0, "",
       null, null, null, "", isoAgo(20), isoAgo(20)
     ],
@@ -310,7 +310,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-panpan-sports", "panpan", "demo-sports-frontdesk", "sports", null,
       "withdrawn", "review", "นิสิตถอนใบสมัครเนื่องจากติดตารางแล็บ", null,
-      JSON.stringify({ nick: "ปันปัน", faculty: "คณะวิศวกรรมศาสตร์", major: "วิศวกรรมคอมพิวเตอร์", year: 3 }),
+      JSON.stringify({ name: "ปันปัน ศิริวัฒน์", nick: "ปันปัน", faculty: "คณะวิศวกรรมศาสตร์", major: "วิศวกรรมคอมพิวเตอร์", year: 3 }),
       "", null, null, null, 0, "",
       null, null, null, "", isoAgo(80), isoAgo(70)
     ],
@@ -318,7 +318,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     [
       "app-seed-panpan-walk", "panpan", "demo-walk-dogs", "pawstay", "NEW-01",
       "offer_declined", "interview", "นิสิตไม่สะดวกช่วงเวลาเช้าที่เสนอ", null,
-      JSON.stringify({ nick: "ปันปัน", faculty: "คณะวิศวกรรมศาสตร์", major: "วิศวกรรมคอมพิวเตอร์", year: 3 }),
+      JSON.stringify({ name: "ปันปัน ศิริวัฒน์", nick: "ปันปัน", faculty: "คณะวิศวกรรมศาสตร์", major: "วิศวกรรมคอมพิวเตอร์", year: 3 }),
       "", null, null, null, 0, "",
       null, null, null, "", isoAgo(110), isoAgo(95)
     ]

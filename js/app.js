@@ -68,6 +68,7 @@ const active = job => job.status === "live";
 const existing = job => state.signedIn ? HappiUM3.hasActiveApplication(state, state.studentId, job.id) : null;
 const ownsApplication = app => !!app && state.signedIn && role === "employer" && jobBy(app.job)?.employer === employerId;
 const studentOwns = app => !!app && state.signedIn && role === "student" && app.student === state.studentId;
+const applicantName = app => app?.profile?.name || state.students[app?.student]?.name || "นิสิต";
 const canChat = app => studentOwns(app) || ownsApplication(app);
 const newId = prefix => prefix + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,6);
 const icon = name => '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">' + icons[name] + '</svg></span>';
@@ -1007,7 +1008,7 @@ function openHiringDialog(id) {
   const app = appBy(id);
   if (!canUpdateHiring(app)) return;
   const options = Object.entries(hiringStages).map(([value,[label]]) => [value,label]);
-  dialog.innerHTML = '<h2 id="dialog-title">อัปเดตสถานะการสมัคร</h2><p>' + html(app.profile.name) + '</p>' +
+  dialog.innerHTML = '<h2 id="dialog-title">อัปเดตสถานะการสมัคร</h2><p>' + html(applicantName(app)) + '</p>' +
     form("update-hiring",'<input type="hidden" name="application" value="' + html(id) + '">' +
       selectField("สถานะการสมัคร","stage",options,hiringStage(app)) +
       '<div data-interview>' + selectField("รายละเอียดนัด","meetingMode",[["chat","ตกลงนัดในแชต"],["scheduled","ระบุวัน เวลา และสถานที่"]],app.interview?.mode || "chat") +
@@ -1362,7 +1363,7 @@ function employerApps() {
               button("แจ้งไม่ผ่าน","decline","danger",app.id) : "");
           return '<article class="panel employer-applicant-card">' +
             '<div>' +
-              headingRow(app.profile.name,hiringBadge(app)) + hiringDetails(app) +
+              headingRow(applicantName(app),hiringBadge(app)) + hiringDetails(app) +
               matchHtml +
               applicationProfileDetails(app.profile) +
               '<p>' + html(shiftLine) + '</p>' +
@@ -1381,7 +1382,7 @@ const chatGlyph = '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24
 
 function chatContact(app) {
   if (role === "employer") {
-    return { name:app.profile.name, photo:validPhoto(app.profile.photo) ? app.profile.photo : "", glyph:"person" };
+    return { name:applicantName(app), photo:validPhoto(app.profile?.photo) ? app.profile.photo : (validPhoto(state.students[app.student]?.photo) ? state.students[app.student].photo : ""), glyph:"person" };
   }
   const id = jobBy(app.job).employer;
   const employer = state.employers[id];
@@ -1414,7 +1415,7 @@ function chatRooms(current) {
     const statusText = last && last.from === role ? (last.status === "sending" ? "กำลังส่ง..." : "อ่านแล้ว") : "";
     const isCurrent = current && (current.id === app.id || ((current.employer || jobBy(current.job)?.employer) === (app.employer || jobBy(app.job)?.employer) && current.student === app.student));
     return '<button type="button" class="chat-room" data-action="chat" data-id="' + html(app.id) +
-      '" data-room-search="' + html(peer.name.toLowerCase()) + '"' + (isCurrent ? ' aria-current="true"' : '') +
+      '" data-room-search="' + html(String(peer.name || "").toLowerCase()) + '"' + (isCurrent ? ' aria-current="true"' : '') +
       '>' + chatAvatar(peer) + '<span class="chat-room-copy"><strong>' + html(peer.name) +
       '</strong><span class="chat-room-meta-row"><small class="chat-room-preview">' + html(preview) + '</small>' +
       (statusText ? '<small class="chat-room-status' + (statusText === "อ่านแล้ว" ? ' is-read' : '') + '">' + html(statusText) + '</small>' : '') +
@@ -1623,7 +1624,7 @@ function employerWork() {
         : '<p class="helper">นิสิตยังไม่ได้กดเช็กอินรอบแรก</p>';
 
       return '<section class="panel work-job-card">' +
-        headingRow(app.profile.name + " · " + (job?.title || "ประกาศงาน"), app.status === "resigned" ? tag("นิสิตลาออกแล้ว","bad") : tag("กำลังทำงาน","good")) +
+        headingRow(applicantName(app) + " · " + (job?.title || "ประกาศงาน"), app.status === "resigned" ? tag("นิสิตลาออกแล้ว","bad") : tag("กำลังทำงาน","good")) +
         '<p class="helper">เวลาทำงาน: ' + html(shiftLabel) + '</p>' +
         sessionsHtml +
         HappiUM4.renderShiftReviewsSummary(app, "employer", { html }) +
@@ -1699,7 +1700,7 @@ function studentReports() {
       empty("ยังไม่มีเรื่องที่แจ้ง","เปิดรายละเอียดของประกาศเพื่อส่งเรื่อง",navButton("กลับไปหางาน","home")));
 }
 function employerReports() {
-  const list = state.reports.filter(r=>r.request);
+  const list = state.reports.filter(r => r.request && jobBy(r.job)?.employer === employerId);
   return header("ชี้แจงเรื่องร้องเรียน") +
     (list.length ? list.map(r=>panel(headingRow(jobBy(r.job).title,badge(reportStates[r.status])) +
       dataList([["คำขอข้อมูล",r.request],["คำชี้แจง",r.reply || "ยังไม่ส่งคำชี้แจง"]]) +
