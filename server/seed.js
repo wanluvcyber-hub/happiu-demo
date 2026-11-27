@@ -115,7 +115,8 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     insertUser.run(`user-student-${id}`, st.code.toUpperCase(), passwordHash, "student", st.name, id);
   }
 
-  // Seed an extra realistic 8-digit NU student account (66310001) to showcase real NU student ID login
+  // Seed 100 sequential Naresuan University student accounts: 66310000 – 66310099
+  // (keeps 66310001 "ปันปัน ศิริวัฒน์" with full demo applications/reports, plus 99 additional realistic NU students)
   const panpanSchedule = [
     { id: "cls-pp-1", day: "จันทร์", start: "09:00", end: "11:00", course: "โครงสร้างข้อมูลและอัลกอริทึม", code: "CPE211", room: "EN 4102", section: "1" },
     { id: "cls-pp-2", day: "พุธ", start: "13:00", end: "15:00", course: "ระบบฐานข้อมูล", code: "CPE242", room: "EN LAB 3", section: "1" },
@@ -139,6 +140,93 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     JSON.stringify(panpanSchedule)
   );
   insertUser.run("user-student-panpan", "66310001", passwordHash, "student", "ปันปัน ศิริวัฒน์", "panpan");
+
+  const nuFacList = loadNuFaculties();
+  const nuFirstNames = [
+    ["กิตติพงศ์", "กิต"], ["ณัฐธิดา", "ณัฐ"], ["ภูริณัฐ", "ภู"], ["ชญานิษฐ์", "นิษฐ์"], ["ธนกฤต", "กฤต"],
+    ["พิชญาภา", "พาย"], ["วรเมธ", "เมธ"], ["กมลชนก", "กมล"], ["ศุภวิชญ์", "วิชญ์"], ["อภิชญา", "แพร"],
+    ["จิรภัทร", "ภัทร"], ["ปวีณ์ธิดา", "ปอ"], ["รัชชานนท์", "นนท์"], ["สุพิชฌาย์", "พิชญ์"], ["ณภัทร", "ภัท"],
+    ["ภัทรานิษฐ์", "ฟ้า"], ["พีรพัฒน์", "พี"], ["ชนกนันท์", "นันท์"], ["ธีรภัทร", "ธีร์"], ["ณิชาภัทร", "ณิชา"],
+    ["ก้องภพ", "ก้อง"], ["มณีรัตน์", "มณี"], ["ปฐมพงศ์", "พงศ์"], ["ศศิประภา", "ศศิ"], ["อานนท์", "อาร์ม"],
+    ["นภัสสร", "นัท"], ["ชยุตม์", "ยุต"], ["กรกนก", "กนก"], ["พชรพล", "พชร"], ["ลลิตา", "ลิลลี่"],
+    ["สัณหณัฐ", "ซัน"], ["พิมพ์ชนก", "ชนก"], ["วิศรุต", "รุต"], ["ฐิติมา", "ติม"], ["นวพล", "พล"],
+    ["กัญญารัตน์", "กัญ"], ["สรวิชญ์", "สร"], ["ปิยธิดา", "ปิย"], ["อัครวินท์", "วิน"], ["ชลธิชา", "ชล"]
+  ];
+  const nuLastNames = [
+    "วงศ์สุวรรณ", "เจริญสุข", "แสงทอง", "ศรีสวัสดิ์", "มั่นคง",
+    "อินทร์แก้ว", "รุ่งเรือง", "สุขสวัสดิ์", "จันทรัตน์", "พงษ์ไพบูลย์",
+    "คำดี", "นาคประเสริฐ", "ธรรมรักษ์", "ไชยวัฒน์", "บุญมี",
+    "สุวรรณภูมิ", "เพชรรัตน์", "ทวีทรัพย์", "กิตติคุณ", "รัตนโชติ",
+    "สมบูรณ์", "อัครเดช", "เลิศล้ำ", "ประเสริฐศรี", "โชคชัย"
+  ];
+  const skillSets = [
+    "Microsoft Office, จัดเอกสาร, ประสานงาน, สื่อสารดี",
+    "Canva, ตัดต่อคลิปสั้น, ถ่ายภาพ, โซเชียลมีเดีย",
+    "แคชเชียร์, ชงเครื่องดื่ม, บริการลูกค้า, คิดเงินแม่นยำ",
+    "Excel, วิเคราะห์ข้อมูล, พิมพ์สัมผัสไว, ภาษาอังกฤษ",
+    "เขียนโปรแกรม, ซ่อมคอมพิวเตอร์, ช่วยงานไอที, ดูแลระบบ",
+    "สอนพิเศษ, อธิบายเข้าใจง่าย, ทำชีทสรุป, ใจเย็น"
+  ];
+  const interestSets = [
+    ["งานเอกสารและธุรการ", "งานห้องสมุด"],
+    ["สื่อและกราฟิก", "งานออนไลน์"],
+    ["ร้านอาหารและกาแฟ", "งานบริการและแคชเชียร์"],
+    ["เทคโนโลยีและไอที", "งานอีเวนต์"],
+    ["การศึกษาและติวเตอร์", "งานในมหาวิทยาลัย"]
+  ];
+  const availSets = [
+    "เย็นวันธรรมดา 17:00–20:00 น.",
+    "เสาร์–อาทิตย์ 09:00–18:00 น.",
+    "อังคาร–พฤหัส 16:30–20:30 น. และวันเสาร์",
+    "ช่วงเย็นหลัง 17:00 น. และทำออนไลน์ได้ทุกวัน"
+  ];
+  const sampleDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
+  const sampleCourses = [
+    ["การสื่อสารภาษาอังกฤษ", "ENG101", "QS 2101"],
+    ["คณิตศาสตร์ทั่วไป", "MTH102", "SC 1204"],
+    ["การคิดเชิงวิเคราะห์", "GEN111", "AG 1102"],
+    ["เทคโนโลยีดิจิทัล", "COM105", "CIT 201"],
+    ["หลักการจัดการเบื้องต้น", "MGT101", "BEC 3102"]
+  ];
+
+  for (let i = 0; i < 100; i++) {
+    if (i === 1) continue; // 66310001 already seeded as panpan
+    const code = String(66310000 + i);
+    const stuId = `stu-${code}`;
+    const [firstName, nick] = nuFirstNames[i % nuFirstNames.length];
+    const lastName = nuLastNames[(i * 7 + Math.floor(i / nuFirstNames.length)) % nuLastNames.length];
+    const fullName = `${firstName} ${lastName}`;
+    const facEntry = nuFacList[i % nuFacList.length] || { faculty: "คณะวิทยาศาสตร์", majors: ["วิทยาการคอมพิวเตอร์"] };
+    const major = facEntry.majors[i % facEntry.majors.length] || facEntry.majors[0];
+    const year = (i % 4) + 1;
+    const d1 = sampleDays[i % sampleDays.length];
+    const d2 = sampleDays[(i + 2) % sampleDays.length];
+    const [c1, code1, r1] = sampleCourses[i % sampleCourses.length];
+    const [c2, code2, r2] = sampleCourses[(i + 1) % sampleCourses.length];
+    const schedule = [
+      { id: `cls-${code}-1`, day: d1, start: "09:00", end: "11:00", course: c1, code: code1, room: r1, section: "1" },
+      { id: `cls-${code}-2`, day: d2, start: "13:00", end: "15:00", course: c2, code: code2, room: r2, section: "1" }
+    ];
+
+    insertStudent.run(
+      stuId,
+      code,
+      fullName,
+      nick,
+      year,
+      facEntry.faculty,
+      major,
+      `${code}@nu.ac.th`,
+      "",
+      `นิสิตชั้นปีที่ ${year} ${facEntry.faculty} สาขา${major} มหาวิทยาลัยนเรศวร พร้อมเรียนรู้และตรงต่อเวลา`,
+      skillSets[i % skillSets.length],
+      `เคยร่วมกิจกรรมนิสิต${facEntry.faculty} มน.`,
+      JSON.stringify(interestSets[i % interestSets.length]),
+      availSets[i % availSets.length],
+      JSON.stringify(schedule)
+    );
+    insertUser.run(`user-student-${code}`, code, passwordHash, "student", fullName, stuId);
+  }
 
   const insertEmployer = db.prepare(`
     INSERT OR REPLACE INTO employers (id, name, type, contact, status, reason, document)
