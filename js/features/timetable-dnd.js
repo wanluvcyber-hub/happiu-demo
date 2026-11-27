@@ -100,64 +100,73 @@
 
     const aiToolsHtml = `
       <div class="tt2d-tools-grid">
-        <section class="panel tt2d-ai-panel">
-          <div class="tt2d-panel-head">
-            <div>
-              <h2 class="heading-with-3d"><img class="icon-3d-lg" src="/img/icons-3d/ai-sparkle.png" alt="">AI สร้างตารางเรียนอัตโนมัติ</h2>
-              <p class="helper">วางข้อความตารางเรียน (1 วิชาต่อบรรทัด) หรืออัปโหลดภาพตารางเรียน เพื่อให้ AI จัดลงตาราง 2 มิติให้อัตโนมัติ</p>
-            </div>
-            <button type="button" class="secondary" data-tt-fill-sample>ใส่ตัวอย่างข้อความ</button>
+        <section class="panel tt2d-tool-card tt2d-ai-panel">
+          <div class="tt2d-card-header">
+            <h2 class="heading-with-3d"><img class="icon-3d-lg" src="/img/icons-3d/ai-sparkle.png" alt="">AI สร้างตารางเรียนอัตโนมัติ</h2>
+            <p class="helper">วางข้อความ (1 วิชา/บรรทัด) หรืออัปโหลดรูปตารางเรียน ให้ AI จัดลงตาราง 2 มิติทันที</p>
           </div>
-          <form data-form="ai-schedule">
-            <label class="field">ข้อความตารางเรียน
-              <textarea name="text" rows="3" maxlength="2000" placeholder="เช่น&#10;จันทร์ 09:00-11:00 แคลคูลัส 1 MTH101 ห้อง SC2101&#10;พุธ 13:00-15:00 การสื่อสารภาษาอังกฤษ ENG101 ห้อง HS3301"></textarea>
-            </label>
+          <form class="tt2d-tool-form" data-form="ai-schedule">
+            <div class="tt2d-field-block">
+              <div class="tt2d-label-row">
+                <label class="tt2d-label" for="tt2d-ai-text">ข้อความตารางเรียน</label>
+                <button type="button" class="tt2d-sample-btn" data-tt-fill-sample>ใส่ตัวอย่างข้อความ</button>
+              </div>
+              <textarea id="tt2d-ai-text" name="text" rows="4" maxlength="2000" placeholder="เช่น&#10;จันทร์ 09:00-11:00 แคลคูลัส 1 MTH101 ห้อง SC2101&#10;พุธ 13:00-15:00 การสื่อสารภาษาอังกฤษ ENG101 ห้อง HS3301"></textarea>
+            </div>
             <div class="tt2d-ai-row">
-              <label class="field">หรืออัปโหลดรูปตารางเรียน (ถ้ามี)
-                <input type="file" name="scheduleImage" accept="image/jpeg,image/png,image/webp">
-              </label>
-              <label class="field">รูปแบบการเพิ่ม
-                <select name="mode">
+              <div class="tt2d-field-block">
+                <span class="tt2d-label">รูปตารางเรียน (ถ้ามี)</span>
+                <label class="tt2d-file-picker">
+                  <input type="file" name="scheduleImage" accept="image/jpeg,image/png,image/webp" data-tt-file-input>
+                  <span class="tt2d-file-btn">เลือกรูป</span>
+                  <span class="tt2d-file-name" data-tt-file-name>ยังไม่ได้เลือกไฟล์</span>
+                </label>
+              </div>
+              <div class="tt2d-field-block">
+                <label class="tt2d-label" for="tt2d-ai-mode">รูปแบบการเพิ่ม</label>
+                <select id="tt2d-ai-mode" name="mode">
                   <option value="merge">เพิ่มต่อจากตารางเดิม</option>
                   <option value="replace">แทนที่ตารางเรียนเดิมทั้งหมด</option>
                 </select>
-              </label>
+              </div>
             </div>
-            <div class="actions">
-              <button type="submit" class="primary"><img class="icon-3d-btn" src="/img/icons-3d/ai-sparkle.png" alt="">ให้ AI สร้างตารางเรียน</button>
+            <div class="tt2d-form-footer">
+              <button type="submit" class="primary tt2d-submit-btn"><img class="icon-3d-btn" src="/img/icons-3d/ai-sparkle.png" alt="">ให้ AI สร้างตารางเรียน</button>
+              <p class="helper" role="alert" data-form-error></p>
             </div>
-            <p class="helper" role="alert" data-form-error></p>
           </form>
         </section>
 
-        <section class="panel tt2d-manual-panel">
-          <h2 class="heading-with-3d"><img class="icon-3d-lg" src="/img/icons-3d/add-class.png" alt="">เพิ่มวิชาเรียนด้วยตนเอง</h2>
-          <p class="helper">เพิ่มทีละวิชาแล้วสามารถลากวาง (Drag &amp; Drop) ย้ายวัน/เวลาในตารางด้านล่างได้ทันที</p>
-          <form data-form="add-schedule-class">
-            <div class="field-grid">
-              <label class="field">วัน
+        <section class="panel tt2d-tool-card tt2d-manual-panel">
+          <div class="tt2d-card-header">
+            <h2 class="heading-with-3d"><img class="icon-3d-lg" src="/img/icons-3d/add-class.png" alt="">เพิ่มวิชาเรียนด้วยตนเอง</h2>
+            <p class="helper">เพิ่มทีละวิชาแล้วลากวาง (Drag &amp; Drop) ย้ายวัน/เวลาในตารางด้านล่างได้ทันที</p>
+          </div>
+          <form class="tt2d-tool-form" data-form="add-schedule-class">
+            <div class="tt2d-manual-grid">
+              <label class="tt2d-field-block"><span class="tt2d-label">วัน</span>
                 <select name="day">${DAYS.map(d => `<option value="${esc(d)}">วัน${esc(d)}</option>`).join("")}</select>
               </label>
-              <label class="field">ชื่อวิชา
+              <label class="tt2d-field-block"><span class="tt2d-label">ชื่อวิชา</span>
                 <input type="text" name="course" required maxlength="80" placeholder="เช่น การตลาดดิจิทัล">
               </label>
-              <label class="field">เวลาเริ่ม
+              <label class="tt2d-field-block"><span class="tt2d-label">เวลาเริ่ม</span>
                 <input type="time" name="start" value="09:00" required>
               </label>
-              <label class="field">เวลาสิ้นสุด
+              <label class="tt2d-field-block"><span class="tt2d-label">เวลาสิ้นสุด</span>
                 <input type="time" name="end" value="11:00" required>
               </label>
-              <label class="field">รหัสวิชา
+              <label class="tt2d-field-block"><span class="tt2d-label">รหัสวิชา</span>
                 <input type="text" name="code" maxlength="20" placeholder="เช่น MKT201">
               </label>
-              <label class="field">ห้องเรียน
+              <label class="tt2d-field-block"><span class="tt2d-label">ห้องเรียน</span>
                 <input type="text" name="room" maxlength="40" placeholder="เช่น QS 2204">
               </label>
             </div>
-            <div class="actions">
-              <button type="submit" class="secondary"><img class="icon-3d-btn" src="/img/icons-3d/add-class.png" alt="">เพิ่มลงตารางเรียน</button>
+            <div class="tt2d-form-footer">
+              <button type="submit" class="secondary tt2d-submit-btn"><img class="icon-3d-btn" src="/img/icons-3d/add-class.png" alt="">เพิ่มลงตารางเรียน</button>
+              <p class="helper" role="alert" data-form-error></p>
             </div>
-            <p class="helper" role="alert" data-form-error></p>
           </form>
         </section>
       </div>
@@ -239,6 +248,18 @@
           : entry
       );
       onSaveSchedule(next, `ย้ายวิชา ${item.course} ไปวัน${targetDay} ${toClock(newStartMin)}–${toClock(newEndMin)} น. แล้ว`);
+    });
+
+    containerEl.addEventListener("change", event => {
+      const fileInput = event.target.closest("[data-tt-file-input]");
+      if (!fileInput) return;
+      const picker = fileInput.closest(".tt2d-file-picker");
+      const nameEl = picker?.querySelector("[data-tt-file-name]");
+      if (nameEl) {
+        const file = fileInput.files?.[0];
+        nameEl.textContent = file ? file.name : "ยังไม่ได้เลือกไฟล์";
+        picker?.classList.toggle("has-file", Boolean(file));
+      }
     });
 
     containerEl.addEventListener("click", event => {

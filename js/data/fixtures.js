@@ -377,21 +377,37 @@ function tutorCard(tutor) {
   const category = tutorCategory(tutor);
   const subject = tutorSubjects[category];
   const owner = state.students[tutor.owner];
-  return '<article class="panel tutor-card" data-subject="' + category + '">' +
+  const isMine = canPostTutor() && tutor.owner === state.studentId;
+  const reqCount = tutor.requests?.length || 0;
+  const reviewCount = tutor.reviews?.length || 0;
+  return '<article class="panel tutor-card' + (isMine ? ' is-own-tutor' : '') + '" data-subject="' + category + '">' +
     '<div class="tutor-card-photo" aria-hidden="true">' + tutorPhoto(tutor) + '</div>' +
-    '<div class="tutor-card-band">' + icon(subject.icon) + '<span>' + html(subject.label) + '</span></div>' +
+    '<div class="tutor-card-band">' +
+      icon(subject.icon) + '<span>' + html(subject.label) + '</span>' +
+      (isMine ? '<span class="tutor-own-chip">ประกาศของฉัน</span>' : '') +
+    '</div>' +
     '<h3>' + html(tutor.subject) + '</h3>' +
-    '<p class="tutor-card-owner">' + (owner ? studentAvatar(owner) : '') + '<span>' + html(tutorOwner(tutor)) + '</span></p>' +
-    '<div class="pills">' + tag(tutor.level) + tag(tutorFormats[tutor.format]) + '</div>' +
+    '<p class="tutor-card-owner">' + (owner ? studentAvatar(owner) : '') + '<span>' + html(tutorOwner(tutor)) + (isMine ? ' (คุณ)' : '') + '</span></p>' +
+    '<div class="pills">' + tag(tutor.level) + tag(tutorFormats[tutor.format]) +
+      (isMine && reqCount > 0 ? tag(reqCount + " คำขอติดต่อ", "good") : "") +
+      (reviewCount > 0 ? tag("★ " + (tutor.reviews.reduce((s, r) => s + Number(r.rating || 0), 0) / reviewCount).toFixed(1) + " (" + reviewCount + ")", "info") : "") +
+    '</div>' +
     '<p class="tutor-card-time">' + icon("clock") + html(tutor.availability) + '</p>' +
     '<div class="tutor-card-footer"><p class="pay">' + html(currency(tutor.rate)) + ' / ชม.</p>' +
-    button("ดูโปรไฟล์","tutor-detail","secondary",tutor.id) + '</div></article>';
+      (isMine
+        ? '<div class="tutor-card-own-actions">' +
+            button("จัดการ/ดูคำขอ","tutor-detail","secondary",tutor.id) +
+            button("แก้ไข","edit-tutor","quiet",tutor.id) +
+          '</div>'
+        : button("ดูโปรไฟล์","tutor-detail","secondary",tutor.id)) +
+    '</div></article>';
 }
 
 function tutorDirectory() {
   const criteria = selected.criteria || {};
   const qTerm = String(criteria.q || "").trim().toLowerCase();
-  const list = state.tutors.filter(tutor =>
+  const tutorScope = selected.tutorScope === "mine" ? "mine" : "all";
+  const allMatched = state.tutors.filter(tutor =>
     (!qTerm || [
       tutor.subject,
       tutorOwner(tutor),
@@ -407,9 +423,60 @@ function tutorDirectory() {
     (!criteria.format || tutor.format === criteria.format || tutor.format === "both") &&
     (!criteria.max || tutor.rate <= Number(criteria.max)));
   const own = canPostTutor() ? state.tutors.filter(tutor => tutor.owner === state.studentId) : [];
+  const totalOwnReqs = own.reduce((sum, t) => sum + (t.requests?.length || 0), 0);
+  // Keep owner's own posts easy to spot at the top when viewing "all", or filter exclusively when "mine"
+  const list = (tutorScope === "mine" && own.length
+    ? allMatched.filter(t => t.owner === state.studentId)
+    : [...allMatched].sort((a, b) => {
+        const aOwn = canPostTutor() && a.owner === state.studentId ? 0 : 1;
+        const bOwn = canPostTutor() && b.owner === state.studentId ? 0 : 1;
+        return aOwn - bOwn;
+      }));
   const minRate = state.tutors.length ? Math.min(...state.tutors.map(t => Number(t.rate) || 0).filter(Boolean)) : 120;
   const activeFilterCount = ["category", "level", "format", "max"].filter(k => Boolean(criteria[k])).length;
   const heroArt = headerMascotSrc();
+  const myTutorSpotlight = own.length
+    ? '<section class="panel my-tutors-spotlight" aria-label="ประกาศรับสอนของฉัน">' +
+        '<div class="my-tutors-head">' +
+          '<div>' +
+            '<div class="my-tutors-title-row">' +
+              '<span class="tutor-own-chip">ประกาศของฉัน</span>' +
+              '<h2>ประกาศรับสอนที่คุณลงไว้ (' + own.length + ')</h2>' +
+            '</div>' +
+            '<p class="helper">เห็นและจัดการโพสต์ของคุณได้ทันทีจากด้านบน · คำขอติดต่อรวม ' + totalOwnReqs + ' รายการ</p>' +
+          '</div>' +
+          navButton("+ ลงประกาศเพิ่ม","tutor-editor","secondary") +
+        '</div>' +
+        '<div class="my-tutors-list">' +
+          own.map(tutor => {
+            const reqs = tutor.requests?.length || 0;
+            const revs = tutor.reviews?.length || 0;
+            return '<div class="my-tutor-row">' +
+              '<div class="my-tutor-row-info">' +
+                '<div class="my-tutor-row-top">' +
+                  '<strong>' + html(tutor.subject) + '</strong>' +
+                  tag(currency(tutor.rate) + " / ชม.", "info") +
+                  tag(reqs + " คำขอติดต่อ", reqs > 0 ? "good" : "") +
+                  (revs > 0 ? tag(revs + " รีวิว") : "") +
+                '</div>' +
+                '<p class="helper">' + html(tutorSubjects[tutorCategory(tutor)].label) + ' · ' + html(tutor.level) + ' · ' + html(tutorFormats[tutor.format]) + ' · ' + html(tutor.availability) + '</p>' +
+              '</div>' +
+              '<div class="my-tutor-row-actions">' +
+                button("ดูคำขอ/รีวิว","tutor-detail","secondary",tutor.id) +
+                button("แก้ไข","edit-tutor","secondary",tutor.id) +
+                button("ลบ","delete-tutor","danger",tutor.id) +
+              '</div>' +
+            '</div>';
+          }).join("") +
+        '</div>' +
+      '</section>'
+    : "";
+  const scopeTabs = own.length
+    ? '<div class="tutor-scope-tabs" role="tablist" aria-label="สลับดูประกาศติวเตอร์">' +
+        '<button type="button" data-action="tutor-scope" data-id="all" aria-pressed="' + (tutorScope === "all") + '">ประกาศทั้งหมด (' + allMatched.length + ')</button>' +
+        '<button type="button" data-action="tutor-scope" data-id="mine" aria-pressed="' + (tutorScope === "mine") + '">เฉพาะประกาศของฉัน (' + own.length + ')</button>' +
+      '</div>'
+    : "";
   return (!state.signedIn ? '<div class="back">' + navButton("หน้าแรก HappiU","landing","text-button") + '</div>' : '') +
     '<section class="pagehead pagehead-illustrated tutor-hero-rich" data-page="tutors">' +
       '<div class="tutor-hero-copy">' +
@@ -419,7 +486,7 @@ function tutorDirectory() {
         '<div class="tutor-hero-stats">' +
           '<span><strong>' + state.tutors.length + '</strong> ติวเตอร์พร้อมสอน</span>' +
           '<span>เริ่มต้น <strong>' + minRate + '</strong> บาท/ชม.</span>' +
-          '<span>ออนไลน์ &amp; ในมอ</span>' +
+          (own.length ? '<span class="is-own-stat">ของคุณ <strong>' + own.length + '</strong> ประกาศ</span>' : '<span>ออนไลน์ &amp; ในมอ</span>') +
         '</div>' +
         (canPostTutor() || !state.signedIn
           ? '<div class="tutor-hero-cta">' + navButton("ลงประกาศรับสอน","tutor-editor","primary") + '</div>'
@@ -427,6 +494,7 @@ function tutorDirectory() {
       '</div>' +
       (heroArt ? '<div class="tutor-hero-visual" aria-hidden="true"><img class="pagehead-art" src="' + heroArt + '" alt=""></div>' : '') +
     '</section>' +
+    myTutorSpotlight +
     '<section class="panel tutor-search">' +
       '<form data-form="tutor-search">' +
         '<div class="tutor-smart-search-row">' +
@@ -447,14 +515,9 @@ function tutorDirectory() {
         '<p class="helper" role="alert" data-form-error></p>' +
       '</form>' +
     '</section>' +
-    '<div class="section-head"><h2>ประกาศรับสอน</h2><span>' + list.length + ' รายการ</span></div>' +
+    '<div class="section-head tutor-dir-head"><div><h2>' + (tutorScope === "mine" ? "ประกาศรับสอนของฉัน" : "ประกาศรับสอนทั้งหมด") + '</h2><span class="helper">' + list.length + ' รายการ' + (own.length && tutorScope === "all" ? ' · แสดงประกาศของคุณไว้ด้านบนสุด' : '') + '</span></div>' + scopeTabs + '</div>' +
     (list.length ? '<div class="tutor-grid">' + list.map(tutorCard).join("") + '</div>'
-      : empty("ไม่พบติวเตอร์ตามข้อความที่ค้นหา","ลองค้นหาด้วยคำอื่น หรือรีเซ็ตตัวกรองเพิ่มเติม")) +
-    (own.length ? panel('<h2>ประกาศรับสอนของฉัน</h2>' + own.map(tutor =>
-      row(headingRow(tutor.subject,tag((tutor.requests?.length || 0) + " คำขอติดต่อ")),
-        button("ดูคำขอติดต่อ","tutor-detail","secondary",tutor.id) +
-        button("แก้ไขประกาศ","edit-tutor","secondary",tutor.id) +
-        button("ลบประกาศ","delete-tutor","danger",tutor.id))).join("")) : "");
+      : empty("ไม่พบติวเตอร์ตามข้อความที่ค้นหา","ลองค้นหาด้วยคำอื่น หรือรีเซ็ตตัวกรองเพิ่มเติม"));
 }
 
 function tutorDetail() {
@@ -471,7 +534,10 @@ function tutorDetail() {
     '<section class="tutor-custom-banner' + (hasBannerImg ? ' has-photo' : '') + '">' +
       (hasBannerImg ? '<img class="tutor-banner-img" src="' + html(tutor.bannerUrl) + '" alt="แบนเนอร์คอร์ส ' + html(tutor.subject) + '">' : '') +
       '<div class="tutor-banner-overlay">' +
-        '<span class="tag info">' + html(tutorSubjects[tutorCategory(tutor)].label) + '</span>' +
+        '<div class="pills">' +
+          '<span class="tag info">' + html(tutorSubjects[tutorCategory(tutor)].label) + '</span>' +
+          (owns ? '<span class="tutor-own-chip">ประกาศรับสอนของคุณ</span>' : '') +
+        '</div>' +
         '<h2>' + html(tutor.subject) + '</h2>' +
         '<p>' + html(tutor.bannerText || ('สอนโดย ' + tutorOwner(tutor) + ' · ' + tutorFormats[tutor.format] + ' · ' + currency(tutor.rate) + '/ชม.')) + '</p>' +
       '</div>' +

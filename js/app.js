@@ -2335,6 +2335,11 @@ const operations = {
   "job-location":id=>go("detail",{job:id,showWorkplace:true}),
   "tutor-detail":id=>go("tutor-detail",{tutor:id}),
   "edit-tutor":id=>go("tutor-editor",{tutor:id}),
+  "tutor-scope"(id) {
+    if (page !== "tutors") return;
+    selected.tutorScope = id === "mine" ? "mine" : "all";
+    render(false);
+  },
   "tutor-quick-cat":id=>go("tutors",{criteria:{...(selected.criteria||{q:"",category:"",level:"",format:"",max:""}),category:id}}),
   "schedule-view"(id) {
     if (page !== "schedule" || !Object.hasOwn(scheduleViews,id)) return;

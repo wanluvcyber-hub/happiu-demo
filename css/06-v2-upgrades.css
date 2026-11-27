@@ -843,26 +843,253 @@ dialog#dialog:has(.photo-checkin-modal) {
   padding: 6px 0;
 }
 
-/* 10. 2D Drag & Drop Timetable + AI Generator */
+/* 10. 2D Drag & Drop Timetable + AI Generator (Balanced Equal-Height Cards) */
+.schedule-tabs {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  padding: 5px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+}
+
+.schedule-tabs button[aria-pressed="true"] {
+  background: linear-gradient(135deg, #f97316, #ea580c) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.26) !important;
+}
+
 .tt2d-tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 14px;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .tt2d-tools-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tt2d-tool-card {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 20px !important;
+  margin: 0 !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(15, 23, 42, 0.09) !important;
+  background: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+.tt2d-ai-panel {
+  background: linear-gradient(180deg, #fffaf5 0%, #ffffff 42%) !important;
+  border-color: rgba(234, 88, 12, 0.2) !important;
+}
+
+.tt2d-card-header {
   margin-bottom: 14px;
 }
 
-.tt2d-panel-head {
+.tt2d-card-header h2 {
+  margin: 0 0 4px !important;
+  font-size: 1.08rem !important;
+}
+
+.tt2d-card-header .helper {
+  margin: 0 !important;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.tt2d-tool-form {
   display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: 14px;
+}
+
+.tt2d-field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 !important;
+  min-width: 0;
+}
+
+.tt2d-label-row {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tt2d-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.tt2d-sample-btn {
+  min-height: 30px !important;
+  padding: 4px 11px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(234, 88, 12, 0.28) !important;
+  background: #fff7ed !important;
+  color: #c2410c !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.tt2d-sample-btn:hover {
+  background: #ffedd5 !important;
+}
+
+.tt2d-tool-form textarea {
+  width: 100%;
+  min-height: 104px;
+  padding: 10px 12px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  background: #f8fafc !important;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.tt2d-tool-form textarea:focus {
+  background: #ffffff !important;
+  border-color: #f97316 !important;
+  outline: 2px solid rgba(249, 115, 22, 0.2);
+}
+
+.tt2d-tool-form input[type="text"],
+.tt2d-tool-form input[type="time"],
+.tt2d-tool-form select {
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 12px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  background: #f8fafc !important;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+.tt2d-tool-form input:focus,
+.tt2d-tool-form select:focus {
+  background: #ffffff !important;
+  border-color: #f97316 !important;
+  outline: 2px solid rgba(249, 115, 22, 0.2);
 }
 
 .tt2d-ai-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+@media (max-width: 540px) {
+  .tt2d-ai-row,
+  .tt2d-manual-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.tt2d-file-picker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 4px 10px 4px 5px;
+  border-radius: 12px;
+  border: 1px dashed rgba(15, 23, 42, 0.24);
+  background: #f8fafc;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tt2d-file-picker:hover {
+  border-color: #f97316;
+  background: #fff7ed;
+}
+
+.tt2d-file-picker.has-file {
+  border-style: solid;
+  border-color: rgba(16, 185, 129, 0.45);
+  background: #ecfdf5;
+}
+
+.tt2d-file-picker input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.tt2d-file-btn {
+  flex: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.tt2d-file-name {
+  min-width: 0;
+  flex: 1;
+  font-size: 0.8rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tt2d-file-picker.has-file .tt2d-file-name {
+  color: #065f46;
+  font-weight: 600;
+}
+
+.tt2d-manual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tt2d-form-footer {
+  margin-top: auto;
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tt2d-form-footer .helper:empty {
+  display: none;
+}
+
+.tt2d-submit-btn {
+  width: 100%;
+  min-height: 46px !important;
+  justify-content: center !important;
+  font-size: 0.94rem !important;
+  font-weight: 700 !important;
+  border-radius: 13px !important;
 }
 
 .tt2d-hint-bar {
@@ -1280,6 +1507,197 @@ body[data-role] .mast .account.is-login-cta:not([hidden]):active {
 
 .mast .account.is-login-cta::before {
   display: none !important;
+}
+
+/* 14. Tutor Owner Spotlight & Card Highlighting */
+.my-tutors-spotlight {
+  border: 1.5px solid rgba(234, 88, 12, 0.28) !important;
+  background: linear-gradient(135deg, #fffaf5 0%, #ffffff 65%, #fff5eb 100%) !important;
+  box-shadow: 0 10px 26px rgba(194, 65, 12, 0.08) !important;
+  margin-bottom: 18px !important;
+}
+
+.my-tutors-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.my-tutors-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.my-tutors-title-row h2 {
+  margin: 0 !important;
+  font-size: 1.08rem;
+}
+
+.my-tutors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.my-tutor-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(234, 88, 12, 0.16);
+}
+
+.my-tutor-row-info {
+  min-width: 0;
+  flex: 1 1 280px;
+}
+
+.my-tutor-row-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.my-tutor-row-top strong {
+  font-size: 0.98rem;
+  color: #1e293b;
+}
+
+.my-tutor-row-info .helper {
+  margin: 0;
+}
+
+.my-tutor-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.my-tutor-row-actions button {
+  min-height: 36px !important;
+  padding: 6px 12px !important;
+  font-size: 0.84rem !important;
+}
+
+.tutor-own-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.28);
+  white-space: nowrap;
+}
+
+.tutor-card.is-own-tutor {
+  border: 2px solid rgba(234, 88, 12, 0.5) !important;
+  background: linear-gradient(180deg, #fffaf5 0%, #ffffff 42%) !important;
+  box-shadow: 0 10px 24px rgba(234, 88, 12, 0.11) !important;
+  position: relative;
+}
+
+.tutor-card-photo {
+  position: relative;
+}
+
+.tutor-own-ribbon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f97316, #c2410c);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(154, 52, 18, 0.35);
+}
+
+.tutor-card.is-own-tutor .tutor-card-band {
+  justify-content: space-between;
+}
+
+.tutor-card.is-own-tutor .tutor-card-band .tutor-own-chip {
+  margin-left: auto;
+}
+
+.tutor-card-own-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tutor-card-own-actions button {
+  min-height: 36px !important;
+  padding: 6px 10px !important;
+  font-size: 0.82rem !important;
+}
+
+.tutor-dir-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tutor-dir-head > div {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tutor-scope-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.tutor-scope-tabs button {
+  min-height: 34px !important;
+  padding: 5px 12px !important;
+  border-radius: 9px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #475569 !important;
+  font-size: 0.83rem !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.tutor-scope-tabs button[aria-pressed="true"] {
+  background: #ffffff !important;
+  color: #c2410c !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+}
+
+.tutor-hero-stats .is-own-stat {
+  background: rgba(234, 88, 12, 0.12);
+  color: #9a3412;
+  border-color: rgba(234, 88, 12, 0.25);
 }
 
 .tt2d-hint-bar {
