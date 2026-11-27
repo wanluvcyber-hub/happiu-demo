@@ -87,7 +87,7 @@ const pageHeaderMeta = {
   "student:profile": { icon: "person", desc: "จัดการข้อมูลนิสิต ทักษะ และพอร์ตฟอลิโอสมัครงานของคุณ" },
   "employer:profile": { icon: "person", desc: "จัดการข้อมูลร้านค้า หน่วยงาน และสถานะการรับรองผู้จ้าง" },
   "admin:profile": { icon: "check", desc: "ตรวจสอบและรับรองสถานะผู้จ้างในระบบมหาวิทยาลัยนเรศวร" },
-  "student:schedule": { icon: "calendar", desc: "วางแผนตารางเรียนควบคู่กะงานพาร์ตไทม์ไม่ให้เวลาชนกัน" },
+  "student:schedule": { icon: "calendar", desc: "" },
   "student:applications": { icon: "list", desc: "ติดตามสถานะใบสมัครและข้อความนัดหมายจากผู้จ้าง" },
   "employer:applications": { icon: "person", desc: "ตรวจรายชื่อผู้สมัคร นัดสัมภาษณ์ และส่งข้อเสนอกะงาน" },
   "student:work": { icon: "wallet", desc: "เช็กกะงานที่กำลังจะมาถึง ชั่วโมงที่รับรอง และรายได้ทั้งหมด" },
@@ -1101,7 +1101,7 @@ function studentSchedule() {
   const work = confirmedWork();
   const tabs = Object.entries(scheduleViews).map(([id,label]) => '<button type="button" class="chip" data-action="schedule-view" data-id="' +
     id + '" aria-pressed="' + (mode === id) + '">' + html(label) + '</button>').join("");
-  return header("ตารางเรียนและงาน","ตาราง 2 มิติ (วัน × เวลา) ของ " + (student.nick || student.name) + " · ลากวางเพื่อจัดตารางหรือให้ AI สร้างให้") +
+  return header("ตารางเรียนและงาน") +
     '<div class="schedule-tabs" role="group" aria-label="แสดงตาราง">' + tabs + '</div>' +
     '<div class="schedule-legend"><span><i class="study"></i> วิชาเรียน (ลากย้ายได้)</span><span><i class="job"></i> เวลาทำงานที่รับเข้าทำแล้ว</span></div>' +
     HappiUTimetable2D.render2DTimetable(student, work, { mode }) +
