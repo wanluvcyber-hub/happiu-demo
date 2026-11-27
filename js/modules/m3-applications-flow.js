@@ -280,17 +280,17 @@
     }
 
     const stepIconSrcs = [
-      "/img/icons-3d/step-apply.png",
-      "/img/icons-3d/step-chat.png",
-      "/img/icons-3d/step-calendar.png",
-      "/img/icons-3d/step-verified.png"
+      "img/icons-3d/step-apply.png",
+      "img/icons-3d/step-chat.png",
+      "img/icons-3d/step-calendar.png",
+      "img/icons-3d/step-verified.png"
     ];
     const horizontalHtml =
       '<div class="app-stepper-horizontal" aria-label="สถานะใบสมัครแบบย่อ">' +
       steps.map(function (step, index) {
         const stepState = step[2];
         const shortLabel = step[0];
-        const iconSrc = stepState === "done" ? "/img/icons-3d/step-verified.png" : (stepIconSrcs[index] || stepIconSrcs[0]);
+        const iconSrc = stepState === "done" ? "img/icons-3d/step-verified.png" : (stepIconSrcs[index] || stepIconSrcs[0]);
         const glyph = stepState === "closed"
           ? "✕"
           : '<img class="icon-3d-step" src="' + iconSrc + '" alt="">';

@@ -759,7 +759,7 @@ function detail() {
   const summaryBar =
     '<section class="job-detail-bar" aria-label="สรุปค่าตอบแทนและสมัครงาน">' +
       '<div class="jdb-pay-group">' +
-        '<span class="jdb-pay-icon" aria-hidden="true"><img src="/img/icons-3d/pay-wallet.png" alt=""></span>' +
+        '<span class="jdb-pay-icon" aria-hidden="true"><img src="img/icons-3d/pay-wallet.png" alt=""></span>' +
         '<div class="jdb-pay-copy">' +
           '<span class="jdb-eyebrow">' + (job.payType === "fixed" ? "ค่าตอบแทนเหมางาน" : "ค่าตอบแทนรายชั่วโมง") + '</span>' +
           '<div class="jdb-pay-line"><strong class="jdb-amount">' + html(payAmountText) + '</strong><span class="jdb-unit">' + payUnit + '</span></div>' +
@@ -1135,10 +1135,10 @@ function studentWork() {
       if (isResigned) {
         jobControls = tag("แจ้งลาออกแล้ว (เก็บประวัติรายได้ครบ)", "bad");
       } else if (activeSession) {
-        jobControls = '<button type="button" class="primary" data-action="photo-check-out" data-id="' + html(activeSession.id) + '"><img class="icon-3d-btn" src="/img/icons-3d/camera-checkin.png" alt="">ถ่ายรูปเช็กเอาต์ (ออกงาน)</button>';
+        jobControls = '<button type="button" class="primary" data-action="photo-check-out" data-id="' + html(activeSession.id) + '"><img class="icon-3d-btn" src="img/icons-3d/camera-checkin.png" alt="">ถ่ายรูปเช็กเอาต์ (ออกงาน)</button>';
       } else {
         jobControls =
-          '<button type="button" class="primary" data-action="photo-check-in" data-id="' + html(app.id) + '"><img class="icon-3d-btn" src="/img/icons-3d/camera-checkin.png" alt="">ถ่ายรูปเช็กอินรอบใหม่ (เข้างาน)</button>' +
+          '<button type="button" class="primary" data-action="photo-check-in" data-id="' + html(app.id) + '"><img class="icon-3d-btn" src="img/icons-3d/camera-checkin.png" alt="">ถ่ายรูปเช็กอินรอบใหม่ (เข้างาน)</button>' +
           button("แจ้งลาออก", "resign-job", "danger", app.id);
       }
 
@@ -1606,8 +1606,8 @@ function employerWork() {
         ? '<div class="work-session-list">' + sessions.map((ws, idx) => {
             const roundNo = sessions.length - idx;
             let controls = "";
-            if (ws.status === "pending_approval") controls = '<button type="button" class="primary" data-action="approve-session" data-id="' + html(ws.id) + '"><img class="icon-3d-btn" src="/img/icons-3d/step-verified.png" alt="">รับรองชั่วโมงรอบนี้</button>';
-            if (ws.status === "approved") controls = '<button type="button" class="secondary" data-action="pay-session" data-id="' + html(ws.id) + '"><img class="icon-3d-btn" src="/img/icons-3d/pay-wallet.png" alt="">บันทึกการจ่ายรอบนี้</button>';
+            if (ws.status === "pending_approval") controls = '<button type="button" class="primary" data-action="approve-session" data-id="' + html(ws.id) + '"><img class="icon-3d-btn" src="img/icons-3d/step-verified.png" alt="">รับรองชั่วโมงรอบนี้</button>';
+            if (ws.status === "approved") controls = '<button type="button" class="secondary" data-action="pay-session" data-id="' + html(ws.id) + '"><img class="icon-3d-btn" src="img/icons-3d/pay-wallet.png" alt="">บันทึกการจ่ายรอบนี้</button>';
             return '<article class="work-session-item">' +
               '<div class="work-session-top"><strong>รอบที่ ' + roundNo + ' · เข้า ' + html(formatSessionClock(ws.checkInAt)) + (ws.checkOutAt ? ' → ออก ' + html(formatSessionClock(ws.checkOutAt)) : ' (กำลังทำงานอยู่)') + '</strong>' +
               badge(sessionStatusLabels[ws.status] || ["บันทึกแล้ว",""]) + '</div>' +
@@ -1972,7 +1972,7 @@ const forms = {
     } catch (err) {
       error(err.message || "AI วิเคราะห์ตารางเรียนไม่สำเร็จ");
     } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<img class="icon-3d-btn" src="/img/icons-3d/ai-sparkle.png" alt="">ให้ AI สร้างตารางเรียน'; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<img class="icon-3d-btn" src="img/icons-3d/ai-sparkle.png" alt="">ให้ AI สร้างตารางเรียน'; }
     }
   },
   async "add-schedule-class"(data, error) {

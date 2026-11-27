@@ -102,7 +102,7 @@
       <div class="tt2d-tools-grid">
         <section class="panel tt2d-tool-card tt2d-ai-panel">
           <div class="tt2d-card-header">
-            <h2 class="heading-with-3d"><img class="icon-3d-lg" src="/img/icons-3d/ai-sparkle.png" alt="">AI สร้างตารางเรียนอัตโนมัติ</h2>
+            <h2 class="heading-with-3d"><img class="icon-3d-lg" src="img/icons-3d/ai-sparkle.png" alt="">AI สร้างตารางเรียนอัตโนมัติ</h2>
             <p class="helper">วางข้อความ (1 วิชา/บรรทัด) หรืออัปโหลดรูปตารางเรียน ให้ AI จัดลงตาราง 2 มิติทันที</p>
           </div>
           <form class="tt2d-tool-form" data-form="ai-schedule">
@@ -131,7 +131,7 @@
               </div>
             </div>
             <div class="tt2d-form-footer">
-              <button type="submit" class="primary tt2d-submit-btn"><img class="icon-3d-btn" src="/img/icons-3d/ai-sparkle.png" alt="">ให้ AI สร้างตารางเรียน</button>
+              <button type="submit" class="primary tt2d-submit-btn"><img class="icon-3d-btn" src="img/icons-3d/ai-sparkle.png" alt="">ให้ AI สร้างตารางเรียน</button>
               <p class="helper" role="alert" data-form-error></p>
             </div>
           </form>
@@ -139,7 +139,7 @@
 
         <section class="panel tt2d-tool-card tt2d-manual-panel">
           <div class="tt2d-card-header">
-            <h2 class="heading-with-3d"><img class="icon-3d-lg" src="/img/icons-3d/add-class.png" alt="">เพิ่มวิชาเรียนด้วยตนเอง</h2>
+            <h2 class="heading-with-3d"><img class="icon-3d-lg" src="img/icons-3d/add-class.png" alt="">เพิ่มวิชาเรียนด้วยตนเอง</h2>
             <p class="helper">เพิ่มทีละวิชาแล้วลากวาง (Drag &amp; Drop) ย้ายวัน/เวลาในตารางด้านล่างได้ทันที</p>
           </div>
           <form class="tt2d-tool-form" data-form="add-schedule-class">
@@ -164,7 +164,7 @@
               </label>
             </div>
             <div class="tt2d-form-footer">
-              <button type="submit" class="secondary tt2d-submit-btn"><img class="icon-3d-btn" src="/img/icons-3d/add-class.png" alt="">เพิ่มลงตารางเรียน</button>
+              <button type="submit" class="secondary tt2d-submit-btn"><img class="icon-3d-btn" src="img/icons-3d/add-class.png" alt="">เพิ่มลงตารางเรียน</button>
               <p class="helper" role="alert" data-form-error></p>
             </div>
           </form>
@@ -175,7 +175,7 @@
     return `
       ${aiToolsHtml}
       <div class="tt2d-hint-bar">
-        <img class="icon-3d" src="/img/icons-3d/tip-bulb.png" alt="">
+        <img class="icon-3d" src="img/icons-3d/tip-bulb.png" alt="">
         <span><strong>เคล็ดลับ:</strong> ลากกล่องวิชาเรียนไปวางยังวันหรือชั่วโมงที่ต้องการเพื่อจัดตารางสอนใหม่ได้ทันที (ระบบบันทึกอัตโนมัติ)</span>
       </div>
       <div class="tt2d-scroll" data-tt2d-root>

@@ -147,7 +147,7 @@
         </div>
 
         <div class="photo-controls" data-capture-controls>
-          <button type="button" class="primary" data-take-shot><img class="icon-3d-btn" src="/img/icons-3d/camera-checkin.png" alt="">ถ่ายภาพพร้อมเวลา</button>
+          <button type="button" class="primary" data-take-shot><img class="icon-3d-btn" src="img/icons-3d/camera-checkin.png" alt="">ถ่ายภาพพร้อมเวลา</button>
           <button type="button" class="secondary" data-switch-camera>สลับกล้อง</button>
           <label class="secondary photo-upload-btn">
             เลือก/อัปโหลดรูป
