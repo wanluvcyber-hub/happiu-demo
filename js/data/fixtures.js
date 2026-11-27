@@ -2,8 +2,9 @@
 const names = {student:"นิสิต", employer:"ผู้จ้าง", admin:"เจ้าหน้าที่ มน."};
 const groups = {campus:"ในมหาวิทยาลัย", near:"รอบมหาวิทยาลัย", online:"ออนไลน์"};
 const jobStates = {draft:["ฉบับร่าง",""], review:["รอตรวจ","wait"], edits:["ส่งกลับให้แก้","bad"], rejected:["ไม่ผ่านการตรวจ","bad"], live:["เปิดรับสมัคร","good"], paused:["ระงับประกาศ","bad"]};
-const appStates = {pending:["รอผล","wait"], offered:["ได้รับข้อเสนอ","info"], declined:["ไม่ผ่าน","bad"], withdrawn:["ถอนใบสมัครแล้ว","bad"], offer_declined:["ปฏิเสธข้อเสนอแล้ว","bad"], accepted:["ยืนยันกะแล้ว","good"]};
-const workStates = {ready:["ยังไม่เริ่มกะ",""], started:["เช็กอินแล้ว","info"], ended:["คาดการณ์ · รอรับรอง","wait"], approved:["อนุมัติแล้ว · รอจ่าย","info"], paid:["จ่ายแล้ว","good"]};
+const appStates = {pending:["รอผล","wait"], offered:["ได้รับข้อเสนอ","info"], declined:["ไม่ผ่าน","bad"], withdrawn:["ถอนใบสมัครแล้ว","bad"], offer_declined:["ปฏิเสธข้อเสนอแล้ว","bad"], resigned:["ลาออกแล้ว","bad"], accepted:["รับเข้าทำงานแล้ว","good"]};
+const workStates = {ready:["พร้อมเช็กอิน",""], started:["กำลังทำงาน (เช็กอินแล้ว)","info"], ended:["คาดการณ์ · รอรับรอง","wait"], approved:["อนุมัติแล้ว · รอจ่าย","info"], paid:["จ่ายแล้ว","good"]};
+const jobTypeLabels = {"part-time":["พาร์ทไทม์","info"], "full-time":["งานประจำ","good"], online:["งานออนไลน์","wait"]};
 const reportStates = {new:["รับเรื่องแล้ว","wait"], reviewing:["กำลังตรวจ","info"], closed:["ตรวจเสร็จ","good"]};
 const icons = {
   paw:'<ellipse cx="6" cy="9" rx="2" ry="2.7"/><ellipse cx="11" cy="6" rx="2" ry="2.7"/><ellipse cx="17" cy="8" rx="2" ry="2.7"/><ellipse cx="21" cy="12" rx="1.5" ry="2.2"/><path d="M12 13c-2.2 0-2.8 2-4.5 3.4C5.2 18.3 6.5 22 10 21c1.5-.5 2.5-.5 4 0 3.5 1 4.8-2.7 2.5-4.6C14.8 15 14.2 13 12 13Z"/>',
@@ -30,8 +31,8 @@ const icons = {
   pin:'<path d="M19 10c0 5-7 11-7 11s-7-6-7-11a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/>'
 };
 const menus = {
-  student:[["home","หางาน","briefcase"],["tutors","หาติวเตอร์","person"],["schedule","ตารางเรียนและงาน","calendar"],["applications","ใบสมัคร","list"],["work","กะและรายได้","wallet"],["profile","โปรไฟล์","person"],["reports","เรื่องที่แจ้ง","flag"]],
-  employer:[["home","ประกาศของฉัน","list"],["applications","ผู้สมัครตามประกาศ","person"],["work","รับรองชั่วโมง","clock"],["reports","ชี้แจงเรื่องร้องเรียน","flag"],["profile","ข้อมูลผู้จ้าง","person"]],
+  student:[["home","หางาน","briefcase"],["tutors","หาติวเตอร์","person"],["schedule","ตารางเรียนและงาน","calendar"],["applications","ใบสมัคร","list"],["work","เวลาทำงานและรายได้","wallet"],["profile","โปรไฟล์","person"],["reports","เรื่องที่แจ้ง","flag"]],
+  employer:[["home","ประกาศของฉัน","list"],["applications","ผู้สมัครตามประกาศ","person"],["chat","ข้อความแชท","list"],["work","รับรองชั่วโมง","clock"],["reports","ชี้แจงเรื่องร้องเรียน","flag"],["profile","ข้อมูลผู้จ้าง","person"]],
   admin:[["home","ตรวจประกาศ","list"],["profile","ตรวจผู้จ้าง","check"],["reports","เรื่องร้องเรียน","flag"]]
 };
 
@@ -107,7 +108,11 @@ function applicationProfile(student, shared = []) {
     ...Object.fromEntries(shared.filter(key => Object.hasOwn(profileFields,key) && student[key]).map(key=>[key,student[key]]))};
 }
 function validPhoto(value) {
-  return typeof value === "string" && /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value);
+  if (typeof value !== "string" || !value.trim()) return false;
+  return (
+    /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value) ||
+    /^\/(?:uploads|api\/uploads)\/[A-Za-z0-9._\-\/]+$/.test(value)
+  );
 }
 function studentAvatar(student, label = "") {
   if (validPhoto(student.photo)) {
@@ -385,16 +390,25 @@ function tutorCard(tutor) {
 
 function tutorDirectory() {
   const criteria = selected.criteria || {};
+  const qTerm = String(criteria.q || "").trim().toLowerCase();
   const list = state.tutors.filter(tutor =>
-    (!criteria.q || [tutor.subject,tutorOwner(tutor),tutorSubjects[tutorCategory(tutor)].label]
-      .join(" ").toLowerCase().includes(criteria.q.toLowerCase())) &&
+    (!qTerm || [
+      tutor.subject,
+      tutorOwner(tutor),
+      tutorSubjects[tutorCategory(tutor)].label,
+      tutor.level,
+      tutorFormats[tutor.format],
+      tutor.experience,
+      tutor.availability,
+      tutor.bannerText || ""
+    ].join(" ").toLowerCase().includes(qTerm)) &&
     (!criteria.category || tutorCategory(tutor) === criteria.category) &&
     (!criteria.level || tutor.level === criteria.level) &&
     (!criteria.format || tutor.format === criteria.format || tutor.format === "both") &&
     (!criteria.max || tutor.rate <= Number(criteria.max)));
   const own = canPostTutor() ? state.tutors.filter(tutor => tutor.owner === state.studentId) : [];
   const minRate = state.tutors.length ? Math.min(...state.tutors.map(t => Number(t.rate) || 0).filter(Boolean)) : 120;
-  const quickCats = [["", "ทุกหมวดวิชา"], ...Object.entries(tutorSubjects).filter(([id]) => id !== "other").map(([id, s]) => [id, s.label])];
+  const activeFilterCount = ["category", "level", "format", "max"].filter(k => Boolean(criteria[k])).length;
   const heroArt = headerMascotSrc();
   return (!state.signedIn ? '<div class="back">' + navButton("หน้าแรก HappiU","landing","text-button") + '</div>' : '') +
     '<section class="pagehead pagehead-illustrated tutor-hero-rich" data-page="tutors">' +
@@ -414,69 +428,126 @@ function tutorDirectory() {
       (heroArt ? '<div class="tutor-hero-visual" aria-hidden="true"><img class="pagehead-art" src="' + heroArt + '" alt=""></div>' : '') +
     '</section>' +
     '<section class="panel tutor-search">' +
-      '<div class="tutor-quick-cats" role="group" aria-label="เลือกหมวดวิชายอดนิยม">' +
-        quickCats.map(([id, label]) =>
-          '<button type="button" class="chip tutor-cat-chip" data-action="tutor-quick-cat" data-id="' + html(id) + '" aria-pressed="' + (criteria.category === id) + '">' + html(label) + '</button>'
-        ).join("") +
-      '</div>' +
       '<form data-form="tutor-search">' +
-        '<div class="field-grid tutor-field-row">' +
-          field("วิชาหรือชื่อติวเตอร์","q",criteria.q,"search",'maxlength="80" placeholder="เช่น Python, ภาษาอังกฤษ"') +
-          selectField("หมวดวิชา","category",[["","ทุกหมวดวิชา"],...Object.entries(tutorSubjects).map(([id,subject])=>[id,subject.label])],criteria.category) +
-          selectField("ระดับผู้เรียน","level",[["","ทุกระดับ"],...tutorLevels.map(level=>[level,level])],criteria.level) +
-          selectField("รูปแบบ","format",[["","ทุกรูปแบบ"],["online",tutorFormats.online],["inPerson",tutorFormats.inPerson]],criteria.format) +
-          field("ราคาสูงสุด (บาท/ชม.)","max",criteria.max,"number",'min=0 max=10000 placeholder="ไม่จำกัด"') +
-          '<div class="tutor-submit-cell"><button class="primary" type="submit">ค้นหาติวเตอร์</button></div>' +
+        '<div class="tutor-smart-search-row">' +
+          '<label class="field tutor-search-main-input"><span class="sr-only">ค้นหาติวเตอร์</span>' +
+            '<input type="search" name="q" value="' + html(criteria.q || "") + '" maxlength="100" placeholder="พิมพ์ชื่อวิชา ชื่อติวเตอร์ ระดับชั้น หรือรูปแบบที่ต้องการ เช่น Python ออนไลน์, คณิต ม.ต้น...">' +
+          '</label>' +
+          '<button class="primary" type="submit">ค้นหาติวเตอร์</button>' +
         '</div>' +
+        '<details class="tutor-filter-collapse"' + (activeFilterCount ? ' open' : '') + '>' +
+          '<summary>ตัวกรองเพิ่มเติม' + (activeFilterCount ? ' (' + activeFilterCount + ' ค่าที่เลือก)' : ' (ค่าพื้นฐาน: ทั้งหมด)') + '</summary>' +
+          '<div class="field-grid tutor-field-row">' +
+            selectField("หมวดวิชา","category",[["","ทุกหมวดวิชา"],...Object.entries(tutorSubjects).map(([id,subject])=>[id,subject.label])],criteria.category || "") +
+            selectField("ระดับผู้เรียน","level",[["","ทุกระดับ"],...tutorLevels.map(level=>[level,level])],criteria.level || "") +
+            selectField("รูปแบบ","format",[["","ทุกรูปแบบ"],["online",tutorFormats.online],["inPerson",tutorFormats.inPerson]],criteria.format || "") +
+            field("ราคาสูงสุด (บาท/ชม.)","max",criteria.max || "","number",'min=0 max=10000 placeholder="ไม่จำกัด"') +
+          '</div>' +
+        '</details>' +
         '<p class="helper" role="alert" data-form-error></p>' +
       '</form>' +
     '</section>' +
     '<div class="section-head"><h2>ประกาศรับสอน</h2><span>' + list.length + ' รายการ</span></div>' +
     (list.length ? '<div class="tutor-grid">' + list.map(tutorCard).join("") + '</div>'
-      : empty("ไม่พบติวเตอร์ตามตัวกรอง","ลองค้นหาชื่อวิชาอื่นหรือเปลี่ยนตัวกรอง")) +
+      : empty("ไม่พบติวเตอร์ตามข้อความที่ค้นหา","ลองค้นหาด้วยคำอื่น หรือรีเซ็ตตัวกรองเพิ่มเติม")) +
     (own.length ? panel('<h2>ประกาศรับสอนของฉัน</h2>' + own.map(tutor =>
-      row(headingRow(tutor.subject,tag(tutor.requests.length + " คำขอติดต่อ")),
+      row(headingRow(tutor.subject,tag((tutor.requests?.length || 0) + " คำขอติดต่อ")),
         button("ดูคำขอติดต่อ","tutor-detail","secondary",tutor.id) +
-        button("แก้ไขประกาศ","edit-tutor","text-button",tutor.id))).join("")) : "");
+        button("แก้ไขประกาศ","edit-tutor","secondary",tutor.id) +
+        button("ลบประกาศ","delete-tutor","danger",tutor.id))).join("")) : "");
 }
 
 function tutorDetail() {
   const tutor = tutorBy(selected.tutor);
   if (!tutor) return empty("ไม่พบประกาศติวเตอร์","กลับไปค้นหาประกาศอื่น",navButton("หาติวเตอร์","tutors"));
   const owns = canPostTutor() && tutor.owner === state.studentId;
+  const ownerProfile = state.students[tutor.owner];
+  const reviews = Array.isArray(tutor.reviews) ? tutor.reviews : [];
+  const avgRating = reviews.length
+    ? (reviews.reduce((sum, r) => sum + Number(r.rating || 0), 0) / reviews.length).toFixed(1)
+    : null;
+  const hasBannerImg = validPhoto(tutor.bannerUrl);
+  const bannerHtml =
+    '<section class="tutor-custom-banner' + (hasBannerImg ? ' has-photo' : '') + '">' +
+      (hasBannerImg ? '<img class="tutor-banner-img" src="' + html(tutor.bannerUrl) + '" alt="แบนเนอร์คอร์ส ' + html(tutor.subject) + '">' : '') +
+      '<div class="tutor-banner-overlay">' +
+        '<span class="tag info">' + html(tutorSubjects[tutorCategory(tutor)].label) + '</span>' +
+        '<h2>' + html(tutor.subject) + '</h2>' +
+        '<p>' + html(tutor.bannerText || ('สอนโดย ' + tutorOwner(tutor) + ' · ' + tutorFormats[tutor.format] + ' · ' + currency(tutor.rate) + '/ชม.')) + '</p>' +
+      '</div>' +
+    '</section>';
+
+  const reviewsHtml = panel(
+    '<div class="tutor-reviews-head"><h2>รีวิวและประสบการณ์จากผู้เรียน</h2>' +
+      (avgRating ? '<span class="tutor-rating-pill">★ ' + html(avgRating) + ' / 5 (' + reviews.length + ' รีวิว)</span>' : '<span class="helper">ยังไม่มีรีวิว</span>') +
+    '</div>' +
+    (reviews.length
+      ? '<div class="tutor-review-list">' + reviews.map(r =>
+          '<article class="tutor-review-item">' +
+            '<div class="tutor-review-top"><strong>' + html(r.reviewerName) + '</strong><span class="stars" aria-label="' + html(r.rating) + ' ดาว">' + "★".repeat(r.rating) + "☆".repeat(5 - r.rating) + '</span></div>' +
+            '<p>' + html(r.comment) + '</p>' +
+          '</article>'
+        ).join("") + '</div>'
+      : '<p class="helper">เป็นคนแรกที่รีวิวติวเตอร์คนนี้</p>') +
+    (!owns ? '<details class="tutor-add-review"><summary>เขียนรีวิวให้ติวเตอร์</summary>' +
+      form("tutor-review",
+        '<input type="hidden" name="tutorId" value="' + html(tutor.id) + '">' +
+        field("ชื่อผู้รีวิว","reviewerName",state.signedIn ? (currentStudent()?.nick || currentStudent()?.name || "") : "","text","required maxlength=60") +
+        selectField("คะแนนความพึงพอใจ","rating",[["5","5 ดาว — ดีเยี่ยม"],["4","4 ดาว — ดีมาก"],["3","3 ดาว — ปานกลาง"],["2","2 ดาว — พอใช้"],["1","1 ดาว — ควรปรับปรุง"]],"5") +
+        area("ความคิดเห็นเกี่ยวกับการสอน","comment"),
+        "ส่งรีวิว") + '</details>' : '')
+  );
+
   return '<div class="back">' + navButton("กลับไปหาติวเตอร์","tutors","text-button") + '</div>' +
-    header(tutor.subject,tutorOwner(tutor)) + '<div class="two">' +
-    panel('<div class="tutor-detail-photo" aria-hidden="true">' + tutorPhoto(tutor) + '</div><h2>รายละเอียดการสอน</h2>' + dataList([
-      ["หมวดวิชา",tutorSubjects[tutorCategory(tutor)].label],["ระดับผู้เรียน",tutor.level],["ราคา",currency(tutor.rate) + " / ชม."],
-      ["รูปแบบ",tutorFormats[tutor.format]],["วันและเวลาว่าง",tutor.availability]
-    ]) + '<h3>ประสบการณ์และแนวการสอน</h3><p class="tutor-note">' + html(tutor.experience) + '</p>' +
-      (owns ? button("แก้ไขประกาศ","edit-tutor","secondary",tutor.id) : "")) +
-    (owns ? panel('<h2>คำขอติดต่อ</h2>' +
-      (tutor.requests.length ? tutor.requests.map(item=>'<article class="tutor-request"><h3>' +
-        html(item.name) + '</h3><p>' + html(item.contact) + '</p><p class="tutor-note">' +
-        html(item.message) + '</p></article>').join("") : '<p class="helper">ยังไม่มีคำขอติดต่อ</p>'))
-      : panel('<h2>ขอติดต่อติวเตอร์</h2>' +
-        '<p class="helper">ทดลองส่งคำขอด้วยข้อมูลตัวอย่าง ติวเตอร์จะเห็นคำขอในต้นแบบบนเบราว์เซอร์นี้</p>' +
-        form("tutor-contact",field("ชื่อผู้ติดต่อ","name","","text","required maxlength=60") +
-          field("อีเมลหรือ LINE ID สำหรับตอบกลับ","contact","","text","required maxlength=100") +
-          area("เรื่องที่อยากเรียนหรือเวลาที่สะดวก","message"),"ส่งคำขอติดต่อ"))) + '</div>';
+    bannerHtml +
+    '<div class="two">' +
+    panel(
+      '<div class="tutor-profile-header">' +
+        (ownerProfile ? studentAvatar(ownerProfile, tutorOwner(tutor)) : '') +
+        '<div><h3>' + html(tutorOwner(tutor)) + '</h3>' +
+        '<p class="helper">' + html(ownerProfile ? (ownerProfile.faculty + ' · ' + ownerProfile.major + ' ปี ' + ownerProfile.year) : 'ติวเตอร์นิสิต มน.') + '</p></div>' +
+      '</div>' +
+      '<h2>รายละเอียดการสอน</h2>' + dataList([
+        ["หมวดวิชา",tutorSubjects[tutorCategory(tutor)].label],["ระดับผู้เรียน",tutor.level],["ราคา",currency(tutor.rate) + " / ชม."],
+        ["รูปแบบ",tutorFormats[tutor.format]],["วันและเวลาว่าง",tutor.availability]
+      ]) +
+      '<div class="tutor-exp-box"><h3>ประสบการณ์และแนวการสอน</h3><p class="tutor-note">' + html(tutor.experience) + '</p></div>' +
+      (owns ? actions(button("แก้ไขประกาศ","edit-tutor","secondary",tutor.id) + button("ลบประกาศ","delete-tutor","danger",tutor.id)) : "")
+    ) +
+    '<div>' +
+      (owns ? panel('<h2>คำขอติดต่อ (' + (tutor.requests?.length || 0) + ')</h2>' +
+        (tutor.requests?.length ? tutor.requests.map(item=>'<article class="tutor-request"><h3>' +
+          html(item.name) + '</h3><p>' + html(item.contact) + '</p><p class="tutor-note">' +
+          html(item.message) + '</p></article>').join("") : '<p class="helper">ยังไม่มีคำขอติดต่อ</p>'))
+        : panel('<h2>ขอติดต่อติวเตอร์</h2>' +
+          '<p class="helper">ส่งข้อมูลช่องทางติดต่อและเวลาที่สะดวก เพื่อให้ติวเตอร์ตอบกลับโดยตรง</p>' +
+          form("tutor-contact",field("ชื่อผู้ติดต่อ","name",state.signedIn ? (currentStudent()?.name || "") : "","text","required maxlength=60") +
+            field("อีเมลหรือ LINE ID สำหรับตอบกลับ","contact",state.signedIn ? (currentStudent()?.contact || "") : "","text","required maxlength=100") +
+            area("เรื่องที่อยากเรียนหรือเวลาที่สะดวก","message"),"ส่งคำขอติดต่อ"))) +
+      reviewsHtml +
+    '</div></div>';
 }
 
 function tutorEditor() {
   const tutor = tutorBy(selected.tutor);
   if (!canPostTutor() || (selected.tutor && tutor?.owner !== state.studentId)) {
-    return empty("เปิดสำหรับบัญชีนิสิต มน.","เลือกบัญชีนิสิตเพื่อสร้างประกาศรับสอน",navButton("กลับไปหาติวเตอร์","tutors"));
+    return empty("เปิดสำหรับบัญชีนิสิต มน.","เข้าสู่ระบบด้วยรหัสนิสิตเพื่อสร้างหรือแก้ไขประกาศรับสอน",navButton("เข้าสู่ระบบ","login","primary"));
   }
   return '<div class="back">' + navButton("กลับไปหาติวเตอร์","tutors","text-button") + '</div>' +
     header(tutor ? "แก้ไขประกาศรับสอน" : "ลงประกาศรับสอน") +
     panel(form("tutor-editor",'<div class="field-grid">' +
       field("วิชาหรือหัวข้อที่สอน","subject",tutor?.subject,"text","required maxlength=80") +
       selectField("หมวดวิชา","category",Object.entries(tutorSubjects).map(([id,subject])=>[id,subject.label]),tutorCategory(tutor || {})) +
-      selectField("ระดับผู้เรียน","level",tutorLevels.map(level=>[level,level]),tutor?.level) +
-      field("ราคา (บาท/ชม.)","rate",tutor?.rate,"number","required min=0 max=10000") +
-      selectField("รูปแบบ","format",Object.entries(tutorFormats),tutor?.format) +
-      '</div>' + field("วันและเวลาว่าง","availability",tutor?.availability,"text","required maxlength=100") +
-      area("ประสบการณ์และแนวการสอน","experience",tutor?.experience),"เผยแพร่ประกาศ"));
+      selectField("ระดับผู้เรียน","level",tutorLevels.map(level=>[level,level]),tutor?.level || tutorLevels[1]) +
+      field("ราคา (บาท/ชม.)","rate",tutor?.rate || 150,"number","required min=0 max=10000") +
+      selectField("รูปแบบ","format",Object.entries(tutorFormats),tutor?.format || "online") +
+      '</div>' +
+      field("วันและเวลาว่าง","availability",tutor?.availability,"text","required maxlength=100") +
+      field("คำอธิบายบนแบนเนอร์ด้านบน (ถ้ามี)","bannerText",tutor?.bannerText || "","text",'maxlength="180" placeholder="เช่น ติวเข้มเน้นทำโจทย์จริง มีชีทสรุปให้ฟรี"') +
+      '<label class="field">รูปภาพแบนเนอร์ด้านบน (JPG, PNG หรือ WebP)<input type="file" name="bannerPhoto" accept="image/png,image/jpeg,image/webp"><small>แสดงที่ส่วนบนของหน้าติดต่อติวเตอร์ (ไม่เกิน 5 MB)</small></label>' +
+      (validPhoto(tutor?.bannerUrl) ? '<label class="share-option"><input type="checkbox" name="removeBanner"> ลบรูปแบนเนอร์ปัจจุบันออก</label>' : '') +
+      area("ประสบการณ์และแนวการสอน","experience",tutor?.experience),"เผยแพร่ประกาศ") +
+      (tutor ? '<div class="actions" style="margin-top:12px">' + button("ลบประกาศนี้","delete-tutor","danger",tutor.id) + '</div>' : ''));
 }
 
 function tutorFields(data, fields) {
@@ -487,45 +558,83 @@ function filterTutors(data) {
   go("tutors",{criteria:tutorFields(data,["q","category","level","format","max"])});
 }
 
-function saveTutor(data,error) {
-  if (!canPostTutor()) return error("เข้าสู่ระบบด้วยบัญชีนิสิตก่อนลงประกาศ");
+async function fileToDataUrl(file, maxBytes = 5 * 1024 * 1024) {
+  if (!file || !file.name) return "";
+  if (!["image/jpeg","image/png","image/webp"].includes(file.type) || file.size > maxBytes) {
+    throw new Error("รองรับเฉพาะรูป JPG, PNG หรือ WebP ขนาดไม่เกิน " + Math.round(maxBytes / (1024 * 1024)) + " MB");
+  }
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("ไม่สามารถอ่านไฟล์รูปได้"));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveTutor(data,error) {
+  if (!canPostTutor()) return error("เข้าสู่ระบบด้วยรหัสนิสิตก่อนลงประกาศ");
   const old = tutorBy(selected.tutor);
   if (selected.tutor && old?.owner !== state.studentId) return error("แก้ได้เฉพาะประกาศของตัวเอง");
-  const values = tutorFields(data,["subject","level","rate","format","availability","experience"]);
+  const values = tutorFields(data,["subject","level","rate","format","availability","experience","bannerText"]);
   const category = data.get("category") || tutorCategory(old || {});
   const rate = Number(values.rate);
-  if (Object.values(values).some(value => !value) || !Object.hasOwn(tutorSubjects,category) || !tutorLevels.includes(values.level) ||
+  if (!values.subject || !values.availability || !values.experience || !Object.hasOwn(tutorSubjects,category) || !tutorLevels.includes(values.level) ||
       !Object.hasOwn(tutorFormats,values.format) || !Number.isInteger(rate) || rate < 0 || rate > 10000) {
     return error("กรอกข้อมูลการสอนและราคาต่อชั่วโมงให้ครบ");
   }
-  const tutor = {id:old?.id || newId("tutor"), owner:state.studentId, requests:old?.requests || [], ...values, category, rate};
-  const previous = state.tutors;
-  state.tutors = old ? previous.map(item=>item.id === old.id ? tutor : item) : [tutor,...previous];
-  if (!persist()) {
-    state.tutors = previous;
-    return error("บันทึกประกาศไม่ได้ กรุณาลองใหม่");
+  try {
+    const bannerFile = data.get("bannerPhoto");
+    const bannerDataUrl = bannerFile?.name ? await fileToDataUrl(bannerFile, 5 * 1024 * 1024) : "";
+    const res = await HappiUApi.saveTutor({
+      id: old?.id || "",
+      ...values,
+      category,
+      rate,
+      bannerDataUrl,
+      removeBanner: data.get("removeBanner") === "on"
+    });
+    applyServerState(res.state);
+    go("tutor-detail",{tutor:res.tutorId});
+    announce(old ? "บันทึกการแก้ไขประกาศรับสอนแล้ว" : "เผยแพร่ประกาศรับสอนแล้ว");
+  } catch (err) {
+    error(err.message || "บันทึกประกาศไม่ได้ กรุณาลองใหม่");
   }
-  go("tutor-detail",{tutor:tutor.id});
-  announce("เผยแพร่ประกาศรับสอนแล้ว");
 }
 
-function requestTutor(data,error,formEl) {
+async function requestTutor(data,error,formEl) {
   const tutor = tutorBy(selected.tutor);
   if (!tutor || (canPostTutor() && tutor.owner === state.studentId)) return error("เปิดประกาศของติวเตอร์ที่ต้องการติดต่อ");
   const fields = tutorFields(data,["name","contact","message"]);
   if (Object.values(fields).some(value=>!value)) return error("กรอกชื่อ ช่องทางติดต่อ และข้อความให้ครบ");
-  tutor.requests.push(fields);
-  if (!persist()) {
-    tutor.requests.pop();
-    return error("บันทึกคำขอไม่ได้ กรุณาลองใหม่");
+  try {
+    const res = await HappiUApi.requestTutor(tutor.id, fields);
+    applyServerState(res.state);
+    formEl.reset();
+    const receipt = document.createElement("p");
+    receipt.className = "callout good";
+    receipt.tabIndex = -1;
+    receipt.textContent = "ส่งคำขอติดต่อติวเตอร์เรียบร้อยแล้ว ติวเตอร์จะเห็นข้อความของคุณในระบบทันที";
+    formEl.replaceWith(receipt);
+    receipt.focus();
+  } catch (err) {
+    error(err.message || "ส่งคำขอไม่ได้ กรุณาลองใหม่");
   }
-  formEl.reset();
-  const receipt = document.createElement("p");
-  receipt.className = "callout info";
-  receipt.tabIndex = -1;
-  receipt.textContent = "บันทึกคำขอติดต่อในต้นแบบแล้ว";
-  formEl.replaceWith(receipt);
-  receipt.focus();
+}
+
+async function submitTutorReview(data, error) {
+  const tutorId = String(data.get("tutorId") || selected.tutor || "").trim();
+  const reviewerName = String(data.get("reviewerName") || "").trim();
+  const rating = Number(data.get("rating"));
+  const comment = String(data.get("comment") || "").trim();
+  if (!reviewerName || !comment) return error("กรอกชื่อและข้อความรีวิวให้ครบ");
+  try {
+    const res = await HappiUApi.reviewTutor(tutorId, { reviewerName, rating, comment });
+    applyServerState(res.state);
+    render(false);
+    announce("ส่งรีวิวให้ติวเตอร์เรียบร้อยแล้ว");
+  } catch (err) {
+    error(err.message || "ส่งรีวิวไม่สำเร็จ");
+  }
 }
 
 const key = "happiu-prototype-v1";

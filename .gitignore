@@ -17,6 +17,12 @@ desktop.ini
 .aws/
 .codex/
 node_modules/
+.env
+data/*.db
+data/*.db-wal
+data/*.db-shm
+uploads/*
+!uploads/.gitkeep
 
 # Large local reference / raw asset archives (excluded for clean Git repo)
 assets/

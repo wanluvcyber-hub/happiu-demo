@@ -1,0 +1,20 @@
+{
+  "name": "happiu-nu-parttime",
+  "version": "2.0.0",
+  "description": "HappiU — ระบบหางานพาร์ตไทม์และหาติวเตอร์สำหรับนิสิตมหาวิทยาลัยนเรศวร (Full-Stack Express + SQLite)",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "seed": "node server/seed.js",
+    "db:reset": "node server/seed.js --force",
+    "db:inspect": "node server/db-tools.js",
+    "test": "node --test server/tests/api.test.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.5.0"
+  }
+}

@@ -65,10 +65,12 @@
 
   window.__happiuChatEmoji = {
     renderQuickBar() {
-      return '<div class="chat-quick-emojis" aria-label="อีโมจิด่วน">' +
+      return '<div class="chat-quick-emojis" aria-label="สติ๊กเกอร์และอีโมจิส่งด่วน">' +
         '<span class="quick-label">ส่งด่วน:</span>' +
-        QUICK.map(em => '<button type="button" class="chat-quick-btn" data-chat-emoji="' + em + '" title="แทรก ' + em + '">' + em + '</button>').join("") +
-        '<button type="button" class="chat-quick-btn is-sticker-shortcut" data-open-stickers>🐘 สติ๊กเกอร์มอนอ</button>' +
+        QUICK.map(em => '<button type="button" class="chat-quick-btn" data-chat-quick-send="' + em + '" title="กดเพื่อส่ง ' + em + ' ทันที">' + em + '</button>').join("") +
+        '<button type="button" class="chat-quick-btn is-sticker-shortcut" data-chat-sticker="hi" title="ส่งสติ๊กเกอร์สวัสดีทันที">🐘 สวัสดี</button>' +
+        '<button type="button" class="chat-quick-btn is-sticker-shortcut" data-chat-sticker="ready" title="ส่งสติ๊กเกอร์พร้อมทำงานทันที">✅ พร้อมเข้างาน</button>' +
+        '<button type="button" class="chat-quick-btn is-sticker-shortcut" data-open-stickers>ทั้งหมด</button>' +
       '</div>';
     },
     renderPicker() {
@@ -122,6 +124,23 @@
           menu.querySelectorAll("[data-emoji-tab]").forEach(b => b.setAttribute("aria-selected", b.getAttribute("data-emoji-tab") === "stickers" ? "true" : "false"));
           const body = menu.querySelector("[data-emoji-body]");
           if (body) body.innerHTML = renderPanelBody("stickers");
+        }
+      }
+      return;
+    }
+
+    const quickSendBtn = e.target.closest("[data-chat-quick-send]");
+    if (quickSendBtn) {
+      const em = quickSendBtn.getAttribute("data-chat-quick-send");
+      const form = quickSendBtn.closest("form.chat-composer");
+      const ta = form && form.querySelector('textarea[name="message"]');
+      burst(quickSendBtn, em);
+      if (ta && form && em) {
+        ta.value = em;
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit();
+        } else {
+          form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
         }
       }
       return;

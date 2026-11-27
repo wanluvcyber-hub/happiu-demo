@@ -6,11 +6,12 @@
     declined: Object.freeze({ label: "ไม่ผ่าน", tone: "bad" }),
     withdrawn: Object.freeze({ label: "ถอนใบสมัครแล้ว", tone: "bad" }),
     offer_declined: Object.freeze({ label: "ปฏิเสธข้อเสนอแล้ว", tone: "bad" }),
-    accepted: Object.freeze({ label: "ยืนยันกะงาน", tone: "good" })
+    resigned: Object.freeze({ label: "ลาออกแล้ว", tone: "bad" }),
+    accepted: Object.freeze({ label: "รับเข้าทำงานแล้ว", tone: "good" })
   });
 
   function isApplicationClosed(status) {
-    return status === "declined" || status === "withdrawn" || status === "offer_declined";
+    return status === "declined" || status === "withdrawn" || status === "offer_declined" || status === "resigned";
   }
 
   function hasActiveApplication(state, studentId, jobId) {
@@ -226,53 +227,84 @@
     const shiftText = shift ? h.time(shift) : "";
     let steps;
 
-    if (status === "withdrawn") {
+    if (status === "resigned") {
+      steps = [
+        ["ส่งใบสมัครแล้ว", "ผู้จ้างได้รับข้อมูลที่คุณเลือกส่ง", "done"],
+        ["คุยกับผู้จ้าง", "", "done"],
+        ["รับเข้าทำงาน", shiftText, "done"],
+        ["แจ้งลาออกแล้ว", app.resignReason ? "เหตุผล: " + app.resignReason : "สิ้นสุดการทำงาน (ยังดูประวัติรายได้ได้)", "closed"]
+      ];
+    } else if (status === "withdrawn") {
       steps = [
         ["ส่งใบสมัครแล้ว", "ผู้จ้างได้รับข้อมูลที่คุณเลือกส่ง", "done"],
         ["ถอนใบสมัครแล้ว", "นิสิตถอนใบสมัครก่อนรับข้อเสนอ", "closed"],
-        ["ผู้จ้างเสนอกะ", "ยกเลิกการพิจารณา", "next"],
-        ["ยืนยันกะงาน", "สมัครใหม่ได้หากประกาศยังเปิดรับ", "next"]
+        ["ผู้จ้างเสนอเวลาทำงาน", "ยกเลิกการพิจารณา", "next"],
+        ["รับเข้าทำงาน", "สมัครใหม่ได้หากประกาศยังเปิดรับ", "next"]
       ];
     } else if (status === "offer_declined") {
       steps = [
         ["ส่งใบสมัครแล้ว", "ผู้จ้างได้รับข้อมูลที่คุณเลือกส่ง", "done"],
         ["คุยกับผู้จ้าง", "", "done"],
-        ["ผู้จ้างเสนอกะ", "ผู้จ้างเคยส่งข้อเสนอกะแล้ว", "done"],
-        ["ปฏิเสธข้อเสนอแล้ว", "คืนสิทธิ์ที่ว่างกะแล้ว สมัครใหม่ได้หากประกาศยังเปิดรับ", "closed"]
+        ["ผู้จ้างเสนอเวลาทำงาน", "ผู้จ้างเคยส่งข้อเสนอเวลาทำงานแล้ว", "done"],
+        ["ปฏิเสธข้อเสนอแล้ว", "คืนสิทธิ์ที่ว่างแล้ว สมัครใหม่ได้หากประกาศยังเปิดรับ", "closed"]
       ];
     } else if (status === "declined") {
       steps = [
         ["ส่งใบสมัครแล้ว", "ผู้จ้างได้รับข้อมูลที่คุณเลือกส่ง", "done"],
         ["คุยกับผู้จ้าง", "ปิดการพิจารณาแล้ว", "done"],
         ["ไม่ผ่านการคัดเลือก", "ผู้จ้างแจ้งผลแล้ว", "closed"],
-        ["ยืนยันกะงาน", "", "next"]
+        ["รับเข้าทำงาน", "", "next"]
       ];
     } else if (status === "offered") {
       steps = [
         ["ส่งใบสมัครแล้ว", "ผู้จ้างได้รับข้อมูลที่คุณเลือกส่ง", "done"],
         ["คุยกับผู้จ้าง", "", "done"],
-        ["ผู้จ้างเสนอกะ", shiftText, "current"],
-        ["ยืนยันกะงาน", "", "next"]
+        ["ผู้จ้างเสนอเวลาทำงาน", shiftText, "current"],
+        ["รับเข้าทำงาน", "", "next"]
       ];
     } else if (status === "accepted") {
       steps = [
         ["ส่งใบสมัครแล้ว", "ผู้จ้างได้รับข้อมูลที่คุณเลือกส่ง", "done"],
         ["คุยกับผู้จ้าง", "", "done"],
-        ["ผู้จ้างเสนอกะ", shiftText, "done"],
-        ["ยืนยันกะงาน", "ดูเวลากะได้ในหน้าตาราง", "current"]
+        ["ผู้จ้างเสนอเวลาทำงาน", shiftText, "done"],
+        ["รับเข้าทำงานแล้ว", "ดูเวลาทำงานและลงเวลาเข้า-ออกได้ในหน้าตารางและรายได้", "current"]
       ];
     } else {
       steps = [
         ["ส่งใบสมัครแล้ว", "ผู้จ้างได้รับข้อมูลที่คุณเลือกส่ง", "done"],
-        app.hiringStage === "interview" ? ["นัดสัมภาษณ์",app.interview?.mode === "scheduled" ? "ดูรายละเอียดนัดด้านบน หรือติดต่อผู้จ้างในแชต" : "เปิดแชตเพื่อตกลงนัดกับผู้จ้าง","current"] :
-          ["คุยกับผู้จ้าง", "เปิดแชทเพื่อตกลงรายละเอียดและเวลากะ", "current"],
-        ["ผู้จ้างเสนอกะ", "", "next"],
-        ["ยืนยันกะงาน", "", "next"]
+        app.hiringStage === "interview" ? ["นัดสัมภาษณ์",app.interview?.mode === "scheduled" ? "ดูรายละเอียดนัดด้านบน หรือติดต่อผู้จ้างในแชท" : "เปิดแชทเพื่อตกลงนัดกับผู้จ้าง","current"] :
+          ["คุยกับผู้จ้าง", "เปิดแชทเพื่อตกลงรายละเอียดและเวลาทำงาน", "current"],
+        ["ผู้จ้างเสนอเวลาทำงาน", "", "next"],
+        ["รับเข้าทำงาน", "", "next"]
       ];
     }
 
-    return (
-      '<ol class="application-timeline" aria-label="ความคืบหน้าใบสมัคร">' +
+    const stepIconSrcs = [
+      "/img/icons-3d/step-apply.png",
+      "/img/icons-3d/step-chat.png",
+      "/img/icons-3d/step-calendar.png",
+      "/img/icons-3d/step-verified.png"
+    ];
+    const horizontalHtml =
+      '<div class="app-stepper-horizontal" aria-label="สถานะใบสมัครแบบย่อ">' +
+      steps.map(function (step, index) {
+        const stepState = step[2];
+        const shortLabel = step[0];
+        const iconSrc = stepState === "done" ? "/img/icons-3d/step-verified.png" : (stepIconSrcs[index] || stepIconSrcs[0]);
+        const glyph = stepState === "closed"
+          ? "✕"
+          : '<img class="icon-3d-step" src="' + iconSrc + '" alt="">';
+        return (
+          '<div class="hstep is-' + h.html(stepState) + '">' +
+            '<span class="hstep-dot" aria-hidden="true">' + glyph + '</span>' +
+            '<span class="hstep-label">' + h.html(shortLabel) + '</span>' +
+          '</div>'
+        );
+      }).join('<span class="hstep-line" aria-hidden="true"></span>') +
+      '</div>';
+
+    const verticalHtml =
+      '<ol class="application-timeline" aria-label="ความคืบหน้าใบสมัครแบบละเอียด">' +
       steps
         .map(function (step, index) {
           const title = step[0];
@@ -295,7 +327,16 @@
           );
         })
         .join("") +
-      "</ol>"
+      "</ol>";
+
+    return (
+      '<div class="app-timeline-wrap" data-timeline-wrap>' +
+        horizontalHtml +
+        '<details class="app-timeline-details">' +
+          '<summary class="app-timeline-toggle">ดูรายละเอียดสถานะทั้งหมด</summary>' +
+          verticalHtml +
+        '</details>' +
+      '</div>'
     );
   }
 
@@ -307,6 +348,9 @@
     }
     if (app.status === "offered") {
       return h.button("ปฏิเสธข้อเสนอ", "decline-offer", "secondary", app.id);
+    }
+    if (app.status === "accepted") {
+      return h.button("ลาออก", "resign-job", "danger", app.id);
     }
     return "";
   }
