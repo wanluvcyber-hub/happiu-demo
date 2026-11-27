@@ -1,10 +1,27 @@
 const express = require("express");
+const fs = require("fs");
 const { getDb, makeId, parseJson, getFullState } = require("../db");
 const { requireAuth, requireRole } = require("../middleware/auth");
 const { saveDataUrlImage, makeUploader } = require("./uploads");
 
 const router = express.Router();
 const checkinUpload = makeUploader("checkins");
+const slipUpload = makeUploader("slips");
+
+function cleanupUploadedFiles(req) {
+  const files = [];
+  if (req.file) files.push(req.file);
+  if (req.files && typeof req.files === "object") {
+    for (const arr of Object.values(req.files)) {
+      if (Array.isArray(arr)) files.push(...arr);
+    }
+  }
+  for (const file of files) {
+    if (file?.path) {
+      try { fs.unlinkSync(file.path); } catch {}
+    }
+  }
+}
 
 function computeShiftDurationHours(jobRow, shiftId) {
   const shifts = parseJson(jobRow?.shifts_json, []);
@@ -189,33 +206,53 @@ router.patch("/:id/approve", requireRole("employer"), (req, res) => {
   });
 });
 
-// Employer Record Payment for a specific work session
-router.patch("/:id/pay", requireRole("employer"), (req, res) => {
-  const db = getDb();
-  const proof = String(req.body?.proof || "").trim();
-  if (!proof) {
-    return res.status(400).json({ error: "กรุณากรอกเลขอ้างอิงการจ่ายเงิน" });
-  }
+// Employer Record Payment for a specific work session (Image slip upload only)
+router.patch(
+  "/:id/pay",
+  requireRole("employer"),
+  slipUpload.fields([{ name: "slip", maxCount: 1 }, { name: "photo", maxCount: 1 }]),
+  (req, res) => {
+    try {
+      const db = getDb();
+      const session = db.prepare("SELECT * FROM work_sessions WHERE id = ?").get(req.params.id);
+      if (!session || session.employer_id !== req.user.entityId) {
+        cleanupUploadedFiles(req);
+        return res.status(404).json({ error: "ไม่พบรายการรอบการทำงานของร้านคุณ" });
+      }
+      if (session.status !== "approved") {
+        cleanupUploadedFiles(req);
+        return res.status(400).json({ error: "ต้องรับรองชั่วโมงก่อนบันทึกการจ่ายเงิน" });
+      }
 
-  const session = db.prepare("SELECT * FROM work_sessions WHERE id = ?").get(req.params.id);
-  if (!session || session.employer_id !== req.user.entityId) {
-    return res.status(404).json({ error: "ไม่พบรายการรอบการทำงานของร้านคุณ" });
-  }
-  if (session.status !== "approved") {
-    return res.status(400).json({ error: "ต้องรับรองชั่วโมงก่อนบันทึกการจ่ายเงิน" });
-  }
+      let slipUrl = "";
+      const uploadedFile = req.files?.slip?.[0] || req.files?.photo?.[0] || req.file;
+      if (uploadedFile) {
+        slipUrl = `/uploads/slips/${uploadedFile.filename}`;
+      } else if (req.body?.slipDataUrl || req.body?.photoDataUrl) {
+        slipUrl = saveDataUrlImage(req.body.slipDataUrl || req.body.photoDataUrl, "slips") || "";
+      }
 
-  const nowIso = new Date().toISOString();
-  db.prepare("UPDATE work_sessions SET status = 'paid', payment_proof = ?, updated_at = ? WHERE id = ?")
-    .run(proof, nowIso, session.id);
-  db.prepare("UPDATE applications SET work_status = 'paid', work_proof = ?, updated_at = ? WHERE id = ?")
-    .run(proof, nowIso, session.application_id);
+      if (!slipUrl) {
+        cleanupUploadedFiles(req);
+        return res.status(400).json({ error: "กรุณาอัปโหลดรูปภาพสลิปโอนเงิน (JPG, PNG หรือ WebP)" });
+      }
 
-  const updated = db.prepare("SELECT * FROM work_sessions WHERE id = ?").get(session.id);
-  res.json({
-    session: updated,
-    state: getFullState(db)
-  });
-});
+      const nowIso = new Date().toISOString();
+      db.prepare("UPDATE work_sessions SET status = 'paid', payment_proof = ?, updated_at = ? WHERE id = ?")
+        .run(slipUrl, nowIso, session.id);
+      db.prepare("UPDATE applications SET work_status = 'paid', work_proof = ?, updated_at = ? WHERE id = ?")
+        .run(slipUrl, nowIso, session.application_id);
+
+      const updated = db.prepare("SELECT * FROM work_sessions WHERE id = ?").get(session.id);
+      res.json({
+        session: updated,
+        state: getFullState(db)
+      });
+    } catch (err) {
+      cleanupUploadedFiles(req);
+      res.status(400).json({ error: err.message || "อัปโหลดสลิปโอนเงินไม่สำเร็จ" });
+    }
+  }
+);
 
 module.exports = router;

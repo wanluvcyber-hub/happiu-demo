@@ -136,7 +136,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     "ถ่ายภาพ, ตัดต่อวิดีโอ, ซ่อมคอมพิวเตอร์, Microsoft Office",
     "เคยเป็นฝ่ายโสตทัศนูปกรณ์งานรับน้องคณะวิศวกรรมศาสตร์ มน.",
     JSON.stringify(["เทคโนโลยีและไอที", "สื่อและกราฟิก", "งานอีเวนต์"]),
-    "เย็นวันธรรมดา 17:00–21:00 และเสาร์–อาทิตย์",
+    "จันทร์ 17:00–21:00, พุธ 17:00–21:00, ศุกร์ 17:00–21:00, เสาร์ 09:00–18:00, อาทิตย์ 09:00–18:00",
     JSON.stringify(panpanSchedule)
   );
   insertUser.run("user-student-panpan", "66310001", passwordHash, "student", "ปันปัน ศิริวัฒน์", "panpan");
@@ -175,10 +175,10 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     ["การศึกษาและติวเตอร์", "งานในมหาวิทยาลัย"]
   ];
   const availSets = [
-    "เย็นวันธรรมดา 17:00–20:00 น.",
-    "เสาร์–อาทิตย์ 09:00–18:00 น.",
-    "อังคาร–พฤหัส 16:30–20:30 น. และวันเสาร์",
-    "ช่วงเย็นหลัง 17:00 น. และทำออนไลน์ได้ทุกวัน"
+    "จันทร์ 17:00–20:00, พุธ 17:00–20:00, ศุกร์ 17:00–20:00",
+    "เสาร์ 09:00–18:00, อาทิตย์ 09:00–18:00",
+    "อังคาร 16:30–20:30, พฤหัสบดี 16:30–20:30, เสาร์ 09:00–17:00",
+    "จันทร์ 17:00–21:00, พฤหัสบดี 17:00–21:00, อาทิตย์ 10:00–18:00"
   ];
   const sampleDays = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
   const sampleCourses = [
@@ -329,7 +329,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
       app.in || null,
       app.out || null,
       isPimLib ? 630 : Number(app.amount || 0),
-      isPimLib ? "REF-NU-2026-001" : (app.proof || ""),
+      isPimLib ? "/api/uploads/placeholder/slip" : (app.proof || ""),
       null,
       null,
       null,
@@ -347,7 +347,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
       "app-seed-baitong-mart", "baitong", "demo-mart-cashier", "campusmart", "NEW-07",
       "accepted", "hired", "ทำงานคล่องแคล่วและสื่อสารกับลูกค้าดีมาก", null,
       JSON.stringify({ name: "ใบตอง วัฒนกิจ", nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
-      "", "paid", isoAgo(72), isoAgo(69), 390, "REF-MART-2026-014",
+      "", "paid", isoAgo(72), isoAgo(69), 390, "/api/uploads/placeholder/slip",
       JSON.stringify({ rating: 5, comment: "พี่ๆ ที่ร้านใจดี สอนงานละเอียด จ่ายค่าจ้างตรงเวลาทุกสัปดาห์ค่ะ", at: isoAgo(48) }),
       JSON.stringify({ rating: 5, comment: "ใบตองมาตรงเวลา คิดเงินแม่นยำ ยิ้มแย้มแจ่มใส แนะนำเลยครับ", at: isoAgo(47) }),
       null, "", isoAgo(168), isoAgo(12)
@@ -365,7 +365,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
       "app-seed-baitong-copy", "baitong", "demo-copyshop-binding", "copyshop", "PB-01",
       "resigned", "hired", "ขอบคุณที่ช่วยงานช่วงเปิดเทอมครับ", null,
       JSON.stringify({ name: "ใบตอง วัฒนกิจ", nick: "ใบตอง", faculty: "คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร", major: "การตลาด", year: 2 }),
-      "", "paid", isoAgo(240), isoAgo(237), 180, "REF-COPY-2026-008",
+      "", "paid", isoAgo(240), isoAgo(237), 180, "/api/uploads/placeholder/slip",
       JSON.stringify({ rating: 4, comment: "งานเป็นระบบดีค่ะ ได้เรียนรู้เรื่องเข้าเล่มเอกสาร", at: isoAgo(190) }),
       JSON.stringify({ rating: 5, comment: "ตั้งใจทำงานดีมากครับ", at: isoAgo(188) }),
       isoAgo(180), "ตารางเรียนช่วงปลายภาคแน่นขึ้น ขอแจ้งลาออกล่วงหน้า 1 สัปดาห์ค่ะ", isoAgo(300), isoAgo(180)
@@ -424,7 +424,7 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
     ["msg-seed-1", "baitong::library", "demo-baitong-library", "baitong", "library", "employer", "สวัสดีครับใบตอง ทางห้องสมุดได้รับใบสมัครแล้ว สะดวกเข้าพูดคุยที่ชั้น 1 วันจันทร์ 16:30 น. ไหมครับ?", isoAgo(10)],
     ["msg-seed-2", "baitong::library", "demo-baitong-library", "baitong", "library", "student", "สวัสดีค่ะ สะดวกเข้าพบวันจันทร์ 16:30 น. เลยค่ะ ขอบคุณมากนะคะ", isoAgo(9)],
     ["msg-seed-3", "baitong::library", "demo-baitong-library", "baitong", "library", "employer", "เยี่ยมเลยครับ เตรียมบัตรนิสิตมาด้วยนะครับ แล้วเจอกันครับ", isoAgo(8)],
-    ["msg-seed-4", "baitong::campusmart", "app-seed-baitong-mart", "baitong", "campusmart", "employer", "โอนค่าจ้างรอบวันเสาร์เรียบร้อยแล้วนะครับ สลิป REF-MART-2026-014", isoAgo(48)],
+    ["msg-seed-4", "baitong::campusmart", "app-seed-baitong-mart", "baitong", "campusmart", "employer", "โอนค่าจ้างรอบวันเสาร์เรียบร้อยแล้วนะครับ อัปโหลดสลิปโอนเงินในระบบแล้ว", isoAgo(48)],
     ["msg-seed-5", "baitong::campusmart", "app-seed-baitong-mart", "baitong", "campusmart", "student", "ได้รับยอดเงินเรียบร้อยแล้วค่ะ ขอบคุณมากค่ะ", isoAgo(47)],
     ["msg-seed-6", "baitong::campusstudio", "app-seed-baitong-studio", "baitong", "campusstudio", "employer", "ส่งข้อเสนอเวลางานทำซับไตเติลให้แล้วนะครับ กดตอบรับในหน้าใบสมัครได้เลย", isoAgo(7)],
     ["msg-seed-7", "pim::library", "demo-pim-library", "pim", "library", "employer", "พิมพ์จัดชั้นหนังสือรอบแรกเรียบร้อยมากครับ โอนค่าจ้างรอบแรกให้แล้วนะ", isoAgo(50)],
@@ -445,14 +445,14 @@ function seedDatabase(db = getDb(), { force = false } = {}) {
   `);
   const seedSessions = [
     // Pim @ Library: 3 complete rounds showing full progression (paid -> approved -> pending_approval)
-    ["ws-seed-pim-1", "demo-pim-library", "pim", "library", "library", "LB-01", isoAgo(120), "/api/uploads/placeholder/checkin", isoAgo(117), "/api/uploads/placeholder/checkout", 3, 210, "paid", "REF-NU-2026-001", "รอบที่ 1: จัดหมวดหมู่หนังสือชั้น 2 และตรวจบาร์โค้ด"],
+    ["ws-seed-pim-1", "demo-pim-library", "pim", "library", "library", "LB-01", isoAgo(120), "/api/uploads/placeholder/checkin", isoAgo(117), "/api/uploads/placeholder/checkout", 3, 210, "paid", "/api/uploads/placeholder/slip", "รอบที่ 1: จัดหมวดหมู่หนังสือชั้น 2 และตรวจบาร์โค้ด"],
     ["ws-seed-pim-2", "demo-pim-library", "pim", "library", "library", "LB-01", isoAgo(72), "/api/uploads/placeholder/checkin", isoAgo(69), "/api/uploads/placeholder/checkout", 3, 210, "approved", "", "รอบที่ 2: ดูแลเคาน์เตอร์ยืม–คืนหนังสือช่วงเย็น"],
     ["ws-seed-pim-3", "demo-pim-library", "pim", "library", "library", "LB-01", isoAgo(8), "/api/uploads/placeholder/checkin", isoAgo(5), "/api/uploads/placeholder/checkout", 3, 210, "pending_approval", "", "รอบที่ 3: จัดโซนอ่านหนังสือและซ่อมสันหนังสือ (รอผู้จ้างตรวจรูป)"],
     // Baitong @ Campus Mart: 2 rounds (paid + pending_approval)
-    ["ws-seed-baitong-mart-1", "app-seed-baitong-mart", "baitong", "demo-mart-cashier", "campusmart", "NEW-07", isoAgo(75), "/api/uploads/placeholder/checkin", isoAgo(72), "/api/uploads/placeholder/checkout", 3, 195, "paid", "REF-MART-2026-014", "รอบที่ 1: แคชเชียร์และเติมสินค้าเครื่องดื่ม"],
+    ["ws-seed-baitong-mart-1", "app-seed-baitong-mart", "baitong", "demo-mart-cashier", "campusmart", "NEW-07", isoAgo(75), "/api/uploads/placeholder/checkin", isoAgo(72), "/api/uploads/placeholder/checkout", 3, 195, "paid", "/api/uploads/placeholder/slip", "รอบที่ 1: แคชเชียร์และเติมสินค้าเครื่องดื่ม"],
     ["ws-seed-baitong-mart-2", "app-seed-baitong-mart", "baitong", "demo-mart-cashier", "campusmart", "NEW-07", isoAgo(15), "/api/uploads/placeholder/checkin", isoAgo(12), "/api/uploads/placeholder/checkout", 3, 195, "pending_approval", "", "รอบที่ 2: ดูแลหน้าร้านช่วงเย็นและปิดยอดกะ"],
     // Baitong @ Copyshop (RESIGNED job, historical paid session preserved!)
-    ["ws-seed-baitong-copy-1", "app-seed-baitong-copy", "baitong", "demo-copyshop-binding", "copyshop", "PB-01", isoAgo(240), "/api/uploads/placeholder/checkin", isoAgo(237), "/api/uploads/placeholder/checkout", 3, 180, "paid", "REF-COPY-2026-008", "รอบทำงานก่อนแจ้งลาออก (เข้าเล่มรายงานนิสิต)"],
+    ["ws-seed-baitong-copy-1", "app-seed-baitong-copy", "baitong", "demo-copyshop-binding", "copyshop", "PB-01", isoAgo(240), "/api/uploads/placeholder/checkin", isoAgo(237), "/api/uploads/placeholder/checkout", 3, 180, "paid", "/api/uploads/placeholder/slip", "รอบทำงานก่อนแจ้งลาออก (เข้าเล่มรายงานนิสิต)"],
     // Thanwa @ IT Support: ACTIVE checked_in round (ready to test Photo Check-out immediately!)
     ["ws-seed-thanwa-it-1", "app-seed-thanwa-it", "thanwa", "demo-it-support", "library", "IT-01", isoAgo(2), "/api/uploads/placeholder/checkin", null, null, 0, 0, "checked_in", "", "กำลังปฏิบัติงานตรวจเช็กคอมพิวเตอร์ห้องค้นคว้าชั้น 3"]
   ];

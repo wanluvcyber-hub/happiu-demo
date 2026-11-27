@@ -1895,3 +1895,149 @@ form[data-form="unified-register"] button[type="submit"] {
   color: #64748b;
 }
 
+/* 13. Payment Slip Upload Modal & Slip Thumbnail Viewer (R2) */
+dialog#dialog:has(.pay-slip-modal) {
+  width: min(520px, calc(100vw - 24px)) !important;
+  max-width: 520px !important;
+  padding: 22px !important;
+}
+
+.pay-slip-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pay-slip-modal h2 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.pay-slip-modal > .helper {
+  margin: 0;
+  color: #475569;
+}
+
+.pay-slip-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.pay-slip-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pay-slip-summary span {
+  font-size: 0.78rem;
+  color: #475569;
+}
+
+.pay-slip-summary strong {
+  font-size: 0.94rem;
+  color: #0f172a;
+  overflow-wrap: anywhere;
+}
+
+.pay-slip-amount {
+  color: #c2410c !important;
+  font-size: 1.04rem !important;
+}
+
+.pay-slip-upload-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1.5px dashed #cbd5e1;
+  background: #ffffff;
+}
+
+.pay-slip-file-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.pay-slip-file-title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.pay-slip-file-label input[type="file"] {
+  min-height: 44px;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 0.9rem;
+}
+
+.pay-slip-file-label input[type="file"]:focus-visible {
+  outline: 3px solid #ea580c;
+  outline-offset: 2px;
+}
+
+.pay-slip-file-meta {
+  margin: 0;
+  font-weight: 600;
+  color: #065f46 !important;
+}
+
+.pay-slip-preview-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+.slip-upload-preview {
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: 10px;
+  object-fit: contain;
+  display: block;
+}
+
+.pay-slip-modal .actions {
+  margin-top: 12px;
+}
+
+.pay-slip-modal button {
+  min-height: 44px;
+}
+
+.work-slip-thumb {
+  border-color: rgba(4, 120, 87, 0.35);
+  background: #064e3b;
+}
+
+.work-slip-thumb span {
+  background: #065f46;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+[data-action="view-payment-slip"] {
+  min-height: 44px;
+}
+
+@media (max-width: 480px) {
+  .pay-slip-summary {
+    grid-template-columns: 1fr;
+  }
+}
+

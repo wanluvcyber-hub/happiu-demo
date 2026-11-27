@@ -874,48 +874,11 @@ function applicationSent() {
       navButton("ดูใบสมัคร","applications")) + '</section>';
 }
 
-const availabilityTimes = Array.from({length:97}, (_, index) => availabilityClock(index * 15));
-
-function availabilityClock(minutes) {
-  return [Math.floor(minutes / 60), minutes % 60].map(part => String(part).padStart(2,"0")).join(":");
-}
-
-function availabilityRow(day = "", start = "", end = "") {
-  const select = (label,name,values,current) => '<label class="field">' + label +
-    '<select name="' + name + '"><option value="">เลือก' + label + '</option>' +
-    values.map(value => '<option' + (value === current ? ' selected' : '') + '>' + html(value) + '</option>').join("") +
-    '</select></label>';
-  const times = current => [...new Set([...availabilityTimes,...(current ? [current] : [])])].sort();
-  return '<div class="availability-row" data-availability-row>' +
-    select("วัน","availableDay",weekDays,day) +
-    select("เวลาเริ่ม","availableStart",times(start).filter(time => time !== "24:00"),start) +
-    select("เวลาสิ้นสุด","availableEnd",times(end).filter(time => time !== "00:00"),end) +
-    '<button type="button" class="text-button" data-action="remove-availability">ลบช่วงเวลา</button></div>';
-}
-
-function availabilityField(value) {
-  const rows = HappiUM1.parseAvailabilityClauses(value).flatMap(({days,time}) =>
-    (days.length ? days : weekDays).map(day => availabilityRow(day,
-      availabilityClock(time?.after ?? 0),availabilityClock(time?.before ?? 1440))));
-  return '<fieldset class="availability-field"><legend>เวลาที่สะดวกทำงาน</legend>' +
-    '<p class="helper">เลือกได้หลายวันหรือหลายช่วงเวลา ระบบจะใช้ข้อมูลนี้หากะงานที่ตรงกับคุณ</p>' +
-    '<div data-availability-rows>' + (rows.join("") || availabilityRow()) + '</div>' +
-    '<button type="button" class="secondary" data-action="add-availability">เพิ่มช่วงเวลา</button></fieldset>';
-}
-
-function selectedAvailability(data) {
-  const starts = data.getAll("availableStart");
-  const ends = data.getAll("availableEnd");
-  const ranges = [];
-  for (const [index, day] of data.getAll("availableDay").entries()) {
-    const start = starts[index];
-    const end = ends[index];
-    if (!day && !start && !end) continue;
-    if (!weekDays.includes(day) || !start || !end || start >= end) return null;
-    ranges.push(day + " " + start + "–" + end);
-  }
-  return [...new Set(ranges)].join(", ");
-}
+const availabilityTimes = HappiUM1.AVAILABILITY_TIMES;
+const availabilityClock = HappiUM1.availabilityClock;
+const availabilityRow = (day = "", start = "", end = "") => HappiUM1.availabilityRow(day, start, end, { html });
+const availabilityField = (value, options) => HappiUM1.availabilityField(value, options, { html });
+const selectedAvailability = data => HappiUM1.selectedAvailability(data);
 
 function recommendationSetup() {
   const student = currentStudent();
@@ -945,7 +908,11 @@ function recommendationSetup() {
     '<form data-form="recommendation-setup">' +
       '<input type="hidden" name="skills" value="' + html(draftSkills) + '">' +
       HappiUM1.renderInterestsField(student, { html }) +
-      availabilityField(student.availability) +
+      availabilityField(student.availability, {
+        legend: "เวลาที่สะดวกทำงาน",
+        helper: "เลือกวันและช่วงเวลาที่สะดวกทำงานได้หลายช่วง (ใช้ตัวเลือกวันและเวลาเท่านั้น)",
+        required: true
+      }) +
       '<div class="actions">' +
         button("← ย้อนกลับ","setup-step-back","secondary") +
         '<button class="primary" type="submit">บันทึกและดูงานแนะนำ</button>' +
@@ -1146,6 +1113,7 @@ function studentWork() {
       const sessionCardsHtml = sessions.length
         ? '<div class="work-session-list">' + sessions.map((ws, idx) => {
             const roundNo = sessions.length - idx;
+            const hasSlip = validPhoto(ws.paymentProof);
             const photoThumbs =
               '<div class="work-session-photos">' +
                 (validPhoto(ws.checkInPhotoUrl)
@@ -1154,14 +1122,18 @@ function studentWork() {
                 (validPhoto(ws.checkOutPhotoUrl)
                   ? '<button type="button" class="work-photo-thumb" data-action="view-work-photo" data-id="' + html(ws.checkOutPhotoUrl) + '"><img src="' + html(ws.checkOutPhotoUrl) + '" alt="รูปเช็กเอาต์รอบที่ ' + roundNo + '" loading="lazy"><span>ออกงาน: ' + html(formatSessionClock(ws.checkOutAt)) + '</span></button>'
                   : '') +
+                (hasSlip
+                  ? '<button type="button" class="work-photo-thumb work-slip-thumb" data-action="view-payment-slip" data-id="' + html(ws.paymentProof) + '" aria-label="ดูสลิปโอนเงินค่าจ้างรอบที่ ' + roundNo + '"><img src="' + html(ws.paymentProof) + '" alt="สลิปโอนเงินค่าจ้างรอบที่ ' + roundNo + '" loading="lazy"><span>สลิปโอนเงินค่าจ้าง</span></button>'
+                  : '') +
               '</div>';
 
             return '<article class="work-session-item">' +
               '<div class="work-session-top"><strong>รอบที่ ' + roundNo + ' · เข้า ' + html(formatSessionClock(ws.checkInAt)) + (ws.checkOutAt ? ' → ออก ' + html(formatSessionClock(ws.checkOutAt)) : ' (กำลังทำงานอยู่)') + '</strong>' +
               badge(sessionStatusLabels[ws.status] || ["บันทึกแล้ว", ""]) + '</div>' +
-              (ws.checkOutAt ? '<p class="helper">รวม ' + html(ws.hours) + ' ชม. · ยอดรอบนี้ <strong>' + html(currency(ws.amount)) + '</strong>' + (ws.paymentProof ? ' · เลขอ้างอิง: ' + html(ws.paymentProof) : '') + '</p>' : '<p class="helper">เมื่อเลิกงานให้กดปุ่ม "ถ่ายรูปเช็กเอาต์" เพื่อสรุปชั่วโมงและส่งให้ผู้จ้างรับรอง</p>') +
+              (ws.checkOutAt ? '<p class="helper">รวม ' + html(ws.hours) + ' ชม. · ยอดรอบนี้ <strong>' + html(currency(ws.amount)) + '</strong></p>' : '<p class="helper">เมื่อเลิกงานให้กดปุ่ม "ถ่ายรูปเช็กเอาต์" เพื่อสรุปชั่วโมงและส่งให้ผู้จ้างรับรอง</p>') +
               (ws.note ? '<p class="helper">หมายเหตุ: ' + html(ws.note) + '</p>' : '') +
               photoThumbs +
+              (hasSlip ? '<div class="actions"><button type="button" class="secondary" data-action="view-payment-slip" data-id="' + html(ws.paymentProof) + '"><img class="icon-3d-btn" src="img/icons-3d/pay-wallet.png" alt="">ดูสลิปโอนเงิน</button></div>' : '') +
             '</article>';
           }).join("") + '</div>'
         : '<p class="helper">ยังไม่มีประวัติการเช็กอิน — กดปุ่ม "ถ่ายรูปเช็กอินรอบใหม่" เมื่อเริ่มทำงานได้เลย (ลงเวลาได้ไม่จำกัดรอบ)</p>';
@@ -1197,7 +1169,8 @@ function profileForm() {
     ["คณะ", p.faculty],
     ["สาขา", p.major],
     ["ชั้นปี", "ปี " + p.year],
-    ["อีเมล", p.contact]
+    ["อีเมล", p.contact],
+    ["เวลาที่สะดวกทำงาน", p.availability || "ยังไม่ระบุ"]
   ].map(([k, v]) => '<div class="profile-info-cell"><span>' + html(k) + '</span><strong>' + html(v || "—") + '</strong></div>').join("");
   return '<section class="student-profile-identity nu-id-hero">' +
       '<div class="nu-id-body">' +
@@ -1606,17 +1579,20 @@ function employerWork() {
       const sessionsHtml = sessions.length
         ? '<div class="work-session-list">' + sessions.map((ws, idx) => {
             const roundNo = sessions.length - idx;
+            const hasSlip = validPhoto(ws.paymentProof);
             let controls = "";
             if (ws.status === "pending_approval") controls = '<button type="button" class="primary" data-action="approve-session" data-id="' + html(ws.id) + '"><img class="icon-3d-btn" src="img/icons-3d/step-verified.png" alt="">รับรองชั่วโมงรอบนี้</button>';
             if (ws.status === "approved") controls = '<button type="button" class="secondary" data-action="pay-session" data-id="' + html(ws.id) + '"><img class="icon-3d-btn" src="img/icons-3d/pay-wallet.png" alt="">บันทึกการจ่ายรอบนี้</button>';
+            if (ws.status === "paid" && hasSlip) controls = '<button type="button" class="secondary" data-action="view-payment-slip" data-id="' + html(ws.paymentProof) + '"><img class="icon-3d-btn" src="img/icons-3d/pay-wallet.png" alt="">ดูสลิปโอนเงิน</button>';
             return '<article class="work-session-item">' +
               '<div class="work-session-top"><strong>รอบที่ ' + roundNo + ' · เข้า ' + html(formatSessionClock(ws.checkInAt)) + (ws.checkOutAt ? ' → ออก ' + html(formatSessionClock(ws.checkOutAt)) : ' (กำลังทำงานอยู่)') + '</strong>' +
               badge(sessionStatusLabels[ws.status] || ["บันทึกแล้ว",""]) + '</div>' +
-              (ws.checkOutAt ? '<p class="helper">รวม ' + html(ws.hours) + ' ชม. · ค่าตอบแทนรอบนี้ <strong>' + html(currency(ws.amount)) + '</strong>' + (ws.paymentProof ? ' · เลขอ้างอิง: ' + html(ws.paymentProof) : '') + '</p>' : '<p class="helper">นิสิตกำลังทำงานอยู่ ยังไม่เช็กเอาต์</p>') +
+              (ws.checkOutAt ? '<p class="helper">รวม ' + html(ws.hours) + ' ชม. · ค่าตอบแทนรอบนี้ <strong>' + html(currency(ws.amount)) + '</strong></p>' : '<p class="helper">นิสิตกำลังทำงานอยู่ ยังไม่เช็กเอาต์</p>') +
               (ws.note ? '<p class="helper">หมายเหตุนิสิต: ' + html(ws.note) + '</p>' : '') +
               '<div class="work-session-photos">' +
                 (validPhoto(ws.checkInPhotoUrl) ? '<button type="button" class="work-photo-thumb" data-action="view-work-photo" data-id="' + html(ws.checkInPhotoUrl) + '"><img src="' + html(ws.checkInPhotoUrl) + '" alt="รูปเข้างาน" loading="lazy"><span>รูปเข้างาน · ' + html(formatSessionClock(ws.checkInAt)) + '</span></button>' : '') +
                 (validPhoto(ws.checkOutPhotoUrl) ? '<button type="button" class="work-photo-thumb" data-action="view-work-photo" data-id="' + html(ws.checkOutPhotoUrl) + '"><img src="' + html(ws.checkOutPhotoUrl) + '" alt="รูปออกงาน" loading="lazy"><span>รูปออกงาน · ' + html(formatSessionClock(ws.checkOutAt)) + '</span></button>' : '') +
+                (hasSlip ? '<button type="button" class="work-photo-thumb work-slip-thumb" data-action="view-payment-slip" data-id="' + html(ws.paymentProof) + '" aria-label="ดูสลิปโอนเงินค่าจ้างรอบที่ ' + roundNo + '"><img src="' + html(ws.paymentProof) + '" alt="สลิปโอนเงินค่าจ้างรอบที่ ' + roundNo + '" loading="lazy"><span>สลิปโอนเงินค่าจ้าง</span></button>' : '') +
               '</div>' +
               (controls ? '<div class="actions">' + controls + '</div>' : '') +
             '</article>';
@@ -1943,7 +1919,7 @@ const forms = {
     const interests = data.getAll("interests");
     const availability = selectedAvailability(data);
     if (!skills) return error("เลือกทักษะอย่างน้อย 1 อย่าง");
-    if (availability === null) return error("เลือกวันและเวลาให้ครบ โดยให้เวลาสิ้นสุดอยู่หลังเวลาเริ่ม");
+    if (!availability) return error("กรุณาเลือกวันและช่วงเวลาที่สะดวกอย่างน้อย 1 ช่วงเวลา โดยให้เวลาสิ้นสุดอยู่หลังเวลาเริ่ม");
     try {
       const res = await HappiUApi.updateStudentProfile({ skills, interests, availability, hideSkillsBanner: false });
       applyServerState(res.state);
@@ -2160,6 +2136,41 @@ const forms = {
       error(err.message || "ส่งคำชี้แจงไม่สำเร็จ");
     }
   },
+  async "pay-session"(data, error, formEl) {
+    const sessionId = String(data.get("sessionId") || "").trim();
+    const fileInput = formEl?.querySelector('input[name="slip"]');
+    const file = fileInput?.files?.[0] || data.get("slip");
+    if (!sessionId) return error("ไม่พบรหัสรอบการทำงาน");
+    if (!file || !file.size) {
+      return error("กรุณาอัปโหลดรูปภาพสลิปโอนเงิน (JPG, PNG หรือ WebP)");
+    }
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      return error("รองรับเฉพาะรูปภาพสลิป JPG, PNG หรือ WebP เท่านั้น");
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      return error("ไฟล์สลิปต้องมีขนาดไม่เกิน 8 MB");
+    }
+    const submitBtn = formEl?.querySelector('button[type="submit"]');
+    const origText = submitBtn ? submitBtn.textContent : "";
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "กำลังอัปโหลดสลิป...";
+    }
+    try {
+      const res = await HappiUApi.paySession(sessionId, file);
+      if (res?.state) applyServerState(res.state);
+      dialog.close();
+      render(false);
+      announce("บันทึกการจ่ายเงินและอัปโหลดสลิปเรียบร้อยแล้ว");
+    } catch (err) {
+      error(err.message || "อัปโหลดสลิปโอนเงินไม่สำเร็จ");
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origText;
+      }
+    }
+  },
   async decision(data,error) {
     const id=data.get("id"), reason=String(data.get("reason") || "").trim();
     const command=data.get("command");
@@ -2170,8 +2181,6 @@ const forms = {
         res = await HappiUApi.adminJobDecision(id, command === "job-edits" ? "edits" : "reject", reason);
       } else if (command === "employer-update") {
         res = await HappiUApi.adminEmployerDecision(id, "update", reason);
-      } else if (command === "pay-session") {
-        res = await HappiUApi.paySession(id, reason);
       } else if (command === "resign-confirm") {
         res = await HappiUApi.resignJob(id, reason);
       } else if (command === "request-reply" || command === "close-report" || command === "pause-report") {
@@ -2291,6 +2300,10 @@ const operations = {
     if (!validPhoto(url)) return;
     showDialog("ภาพยืนยันเวลาเข้า–ออกงาน", '<img class="chat-photo-full" src="' + html(url) + '" alt="ภาพถ่ายพร้อมลายน้ำวันเวลา">');
   },
+  "view-payment-slip"(url) {
+    if (!validPhoto(url)) return;
+    showDialog("สลิปโอนเงินค่าจ้าง", '<img class="chat-photo-full" src="' + html(url) + '" alt="สลิปโอนเงินค่าจ้าง">');
+  },
   async "approve-session"(sessionId) {
     try {
       const res = await HappiUApi.approveSession(sessionId);
@@ -2302,7 +2315,41 @@ const operations = {
     }
   },
   "pay-session"(sessionId) {
-    actionForm("บันทึกการจ่ายเงินรอบนี้", "ใส่เลขอ้างอิงการโอน/ใบเสร็จ เพื่อยืนยันการจ่ายค่าตอบแทนให้แก่นิสิต", "pay-session", sessionId, "เลขอ้างอิงการจ่ายเงิน");
+    const ws = (state.workSessions || []).find(s => s.id === sessionId);
+    const app = ws ? appBy(ws.applicationId) : null;
+    if (!ws || !app || !ownsApplication(app) || ws.status !== "approved") return;
+    const job = jobBy(app.job);
+    const summaryHtml =
+      '<div class="pay-slip-summary">' +
+        '<div><span>นิสิต</span><strong>' + html(applicantName(app)) + '</strong></div>' +
+        '<div><span>งาน</span><strong>' + html(job?.title || "งานพาร์ตไทม์") + '</strong></div>' +
+        '<div><span>ชั่วโมงทำงาน</span><strong>' + html(ws.hours) + ' ชม.</strong></div>' +
+        '<div><span>ยอดค่าจ้างที่จ่าย</span><strong class="pay-slip-amount">' + html(currency(ws.amount)) + '</strong></div>' +
+      '</div>';
+    const slipInputHtml =
+      '<div class="pay-slip-upload-box">' +
+        '<label class="field pay-slip-file-label" for="pay-slip-file-input">' +
+          '<span class="pay-slip-file-title">แนบรูปภาพสลิปโอนเงิน (จำเป็น)</span>' +
+          '<input id="pay-slip-file-input" type="file" name="slip" accept="image/jpeg,image/png,image/webp" required>' +
+          '<small class="helper">รองรับเฉพาะไฟล์ JPG, PNG หรือ WebP ขนาดไม่เกิน 8 MB</small>' +
+        '</label>' +
+        '<p class="helper pay-slip-file-meta" data-slip-meta hidden></p>' +
+        '<div class="pay-slip-preview-wrap" data-slip-preview-wrap hidden>' +
+          '<img class="slip-upload-preview" data-slip-preview alt="ตัวอย่างสลิปโอนเงินที่เลือก">' +
+        '</div>' +
+      '</div>';
+    dialog.innerHTML =
+      '<div class="pay-slip-modal">' +
+        '<h2 id="dialog-title">อัปโหลดสลิปโอนเงินค่าจ้าง</h2>' +
+        '<p class="helper">แนบรูปภาพสลิปการโอนเงินเพื่อยืนยันการจ่ายค่าตอบแทนให้แก่นิสิต (ไม่ต้องกรอกเลขอ้างอิง)</p>' +
+        summaryHtml +
+        form("pay-session",
+          '<input type="hidden" name="sessionId" value="' + html(ws.id) + '">' +
+          slipInputHtml,
+          "ยืนยันการจ่ายเงินและส่งสลิป") +
+        button("ยกเลิก", "close-dialog", "text-button") +
+      '</div>';
+    dialog.showModal();
   },
   "resign-job"(appId) {
     const app = appBy(appId);
@@ -2649,6 +2696,52 @@ document.addEventListener("submit",event=>{
 });
 document.addEventListener("change",event=>{
   if (event.target.closest('form[data-form="update-hiring"]') && ["stage","meetingMode"].includes(event.target.name)) syncInterviewFields();
+  if (event.target.matches('form[data-form="pay-session"] input[name="slip"]')) {
+    const input = event.target;
+    const formEl = input.closest('form[data-form="pay-session"]');
+    const errEl = formEl?.querySelector("[data-form-error]");
+    const metaEl = formEl?.querySelector("[data-slip-meta]");
+    const previewWrap = formEl?.querySelector("[data-slip-preview-wrap]");
+    const previewImg = formEl?.querySelector("[data-slip-preview]");
+    const file = input.files?.[0];
+    if (errEl) errEl.textContent = "";
+    if (!file) {
+      if (metaEl) { metaEl.textContent = ""; metaEl.hidden = true; }
+      if (previewWrap) previewWrap.hidden = true;
+      if (previewImg) previewImg.removeAttribute("src");
+      return;
+    }
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      input.value = "";
+      if (metaEl) { metaEl.textContent = ""; metaEl.hidden = true; }
+      if (previewWrap) previewWrap.hidden = true;
+      if (previewImg) previewImg.removeAttribute("src");
+      if (errEl) errEl.textContent = "รองรับเฉพาะไฟล์รูปภาพ JPG, PNG หรือ WebP เท่านั้น";
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      input.value = "";
+      if (metaEl) { metaEl.textContent = ""; metaEl.hidden = true; }
+      if (previewWrap) previewWrap.hidden = true;
+      if (previewImg) previewImg.removeAttribute("src");
+      if (errEl) errEl.textContent = "ไฟล์สลิปต้องมีขนาดไม่เกิน 8 MB";
+      return;
+    }
+    const sizeKb = Math.max(1, Math.round(file.size / 1024));
+    if (metaEl) {
+      metaEl.textContent = "ไฟล์ที่เลือก: " + file.name + " (" + sizeKb.toLocaleString("th-TH") + " KB)";
+      metaEl.hidden = false;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (previewImg && previewWrap) {
+        previewImg.src = reader.result;
+        previewWrap.hidden = false;
+      }
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
   if (event.target.matches('.chat-composer input[name="attachment"]')) {
     refreshChatAttachment(event.target.closest(".chat-composer"));
     return;

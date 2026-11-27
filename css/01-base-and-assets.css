@@ -1544,7 +1544,9 @@ body[data-page="landing"] .landing-art { position:relative; inset:auto; }
   display:flex; align-items:center; gap:8px; min-height:46px; padding:8px 11px;
   background:var(--tutor-tint); color:var(--tutor-ink); border-radius:10px; font-weight:750; font-size:.9rem;
 }
-.tutor-card-owner,.tutor-card-time { display:flex; align-items:center; gap:7px; color:var(--muted); font-size:.88rem; }
+.tutor-card-owner { display:flex; align-items:center; gap:7px; color:var(--muted); font-size:.88rem; }
+.tutor-card-time { display:flex; align-items:flex-start; gap:7px; color:var(--muted); font-size:.88rem; }
+.tutor-card-time .icon { flex:0 0 auto; margin-top:2px; }
 .tutor-card-owner .student-avatar { width:28px; height:28px; flex:0 0 28px; }
 .tutor-card .pills { margin:0; }
 .tutor-card-footer {
@@ -1569,15 +1571,17 @@ body[data-page="tutors"] .pagehead h1 { color:#503378; }
 .skill-entry { display:flex; align-items:end; gap:8px; flex-wrap:wrap; }
 .skill-entry .field { margin:0; flex:1 1 185px; min-width:0; }
 .skill-entry .secondary { min-height:44px; }
-.availability-field { min-inline-size:0; margin-block:16px; padding:12px; border:1px solid var(--line); border-radius:10px; }
-.availability-field legend { font-weight:700; padding-inline:4px; }
+.availability-field { min-inline-size:0; margin-block:16px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
+.availability-field legend { font-weight:700; padding-inline:6px; }
+.availability-field [data-action="add-availability"] { margin-top:8px; }
 .availability-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)) auto; align-items:end; gap:8px; margin-block:8px; }
 .availability-row .field { margin:0; min-width:0; }
 .availability-row select { width:100%; }
 .availability-row .text-button { min-height:44px; }
 @media(max-width:540px) {
-  .availability-row { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .availability-row { grid-template-columns:repeat(2,minmax(0,1fr)); padding:10px; border:1px solid var(--line); border-radius:10px; background:rgba(248,250,252,.8); }
   .availability-row .field:first-child { grid-column:1/-1; }
+  .availability-row .text-button { grid-column:1/-1; justify-self:start; }
 }
 .skill-feedback { margin:5px 0 0; }
 .skill-feedback:empty { display:none; }

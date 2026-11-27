@@ -22,6 +22,197 @@
     pim: ["งานในมหาวิทยาลัย", "ร้านอาหารและกาแฟ"]
   };
 
+  const WEEK_DAYS = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์", "อาทิตย์"];
+
+  function availabilityClock(minutes) {
+    const m = Number(minutes);
+    const hh = Math.floor(m / 60);
+    const mm = m % 60;
+    return String(hh).padStart(2, "0") + ":" + String(mm).padStart(2, "0");
+  }
+
+  const AVAILABILITY_TIMES = Array.from({ length: 97 }, function (_, index) {
+    return availabilityClock(index * 15);
+  });
+
+  function parseClockValue(raw, allow24) {
+    const match = String(raw ?? "").trim().match(/^(\d{1,2}):(\d{2})$/);
+    if (!match) return null;
+    const hh = Number(match[1]);
+    const mm = Number(match[2]);
+    if (!Number.isInteger(hh) || !Number.isInteger(mm) || mm < 0 || mm > 59) return null;
+    if (hh === 24) {
+      if (!allow24 || mm !== 0) return null;
+      return { formatted: "24:00", minutes: 1440 };
+    }
+    if (hh < 0 || hh > 23) return null;
+    return {
+      formatted: String(hh).padStart(2, "0") + ":" + String(mm).padStart(2, "0"),
+      minutes: hh * 60 + mm
+    };
+  }
+
+  function normalizeAvailabilityDay(raw) {
+    const trimmed = String(raw ?? "").trim().replace(/^วัน/, "");
+    return WEEK_DAYS.indexOf(trimmed) !== -1 ? trimmed : "";
+  }
+
+  function validateAndNormalizeAvailability(input, options) {
+    const opts = options && typeof options === "object" ? options : {};
+    const allowEmpty = opts.required !== undefined ? !opts.required : Boolean(opts.allowEmpty);
+    const maxSlots = Number.isFinite(Number(opts.maxSlots)) && Number(opts.maxSlots) > 0
+      ? Number(opts.maxSlots)
+      : 21;
+    const invalidRangeMsg = "กรุณาเลือกวันและช่วงเวลาที่ถูกต้อง (เช่น จันทร์ 17:00–20:00) โดยเวลาสิ้นสุดต้องอยู่หลังเวลาเริ่ม";
+    const emptyMsg = "กรุณาเลือกวันและช่วงเวลาว่างอย่างน้อย 1 ช่วงเวลา";
+
+    if (input === null || input === undefined) {
+      return allowEmpty ? { ok: true, value: "", slots: [] } : { ok: false, error: emptyMsg };
+    }
+
+    const rawSlots = [];
+    if (Array.isArray(input)) {
+      if (input.length === 0) {
+        return allowEmpty ? { ok: true, value: "", slots: [] } : { ok: false, error: emptyMsg };
+      }
+      for (let i = 0; i < input.length; i++) {
+        const item = input[i];
+        if (!item || typeof item !== "object" || Array.isArray(item)) {
+          return { ok: false, error: invalidRangeMsg };
+        }
+        rawSlots.push({ day: item.day, start: item.start, end: item.end });
+      }
+    } else if (typeof input === "string") {
+      const trimmed = input.trim();
+      if (!trimmed) {
+        return allowEmpty ? { ok: true, value: "", slots: [] } : { ok: false, error: emptyMsg };
+      }
+      if (trimmed.length > 800) {
+        return { ok: false, error: "ข้อมูลช่วงเวลาว่างยาวเกินกำหนด (เลือกได้สูงสุด " + maxSlots + " ช่วงเวลา)" };
+      }
+      const parts = trimmed.split(",");
+      const slotPattern = /^(?:วัน)?(จันทร์|อังคาร|พุธ|พฤหัสบดี|ศุกร์|เสาร์|อาทิตย์)\s+([01]?\d|2[0-3]):([0-5]\d)\s*[-–]\s*([01]?\d|2[0-4]):([0-5]\d)(?:\s*น\.)?$/;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i].trim();
+        if (!part) return { ok: false, error: invalidRangeMsg };
+        const m = part.match(slotPattern);
+        if (!m) return { ok: false, error: invalidRangeMsg };
+        rawSlots.push({ day: m[1], start: m[2] + ":" + m[3], end: m[4] + ":" + m[5] });
+      }
+    } else {
+      return { ok: false, error: invalidRangeMsg };
+    }
+
+    const seen = new Set();
+    const slots = [];
+    for (let i = 0; i < rawSlots.length; i++) {
+      const day = normalizeAvailabilityDay(rawSlots[i].day);
+      const startObj = parseClockValue(rawSlots[i].start, false);
+      const endObj = parseClockValue(rawSlots[i].end, true);
+      if (!day || !startObj || !endObj || startObj.minutes >= endObj.minutes) {
+        return { ok: false, error: invalidRangeMsg };
+      }
+      const key = day + "|" + startObj.formatted + "|" + endObj.formatted;
+      if (!seen.has(key)) {
+        seen.add(key);
+        slots.push({ day: day, start: startObj.formatted, end: endObj.formatted });
+      }
+    }
+
+    if (slots.length === 0) {
+      return allowEmpty ? { ok: true, value: "", slots: [] } : { ok: false, error: emptyMsg };
+    }
+    if (slots.length > maxSlots) {
+      return { ok: false, error: "เลือกช่วงเวลาได้สูงสุด " + maxSlots + " ช่วงเวลา" };
+    }
+
+    const value = slots.map(function (s) {
+      return s.day + " " + s.start + "–" + s.end;
+    }).join(", ");
+    if (value.length > 600) {
+      return { ok: false, error: "ข้อมูลช่วงเวลาว่างยาวเกินกำหนด (เลือกได้สูงสุด " + maxSlots + " ช่วงเวลา)" };
+    }
+
+    return { ok: true, value: value, slots: slots };
+  }
+
+  function availabilityRow(day, start, end, helpers) {
+    const esc = helpers && typeof helpers.html === "function" ? helpers.html : defaultHtml;
+    const curDay = normalizeAvailabilityDay(day || "");
+    const rawStart = String(start || "").trim();
+    const rawEnd = String(end || "").trim();
+    const curStart = /^\d{2}:\d{2}$/.test(rawStart) ? rawStart : "";
+    const curEnd = /^\d{2}:\d{2}$/.test(rawEnd) ? rawEnd : "";
+    function buildSelect(label, name, values, current, formatLabel) {
+      return '<label class="field">' + esc(label) +
+        '<select name="' + esc(name) + '"><option value="">เลือก' + esc(label) + '</option>' +
+        values.map(function (val) {
+          const text = typeof formatLabel === "function" ? formatLabel(val) : val;
+          return '<option value="' + esc(val) + '"' + (val === current ? ' selected' : '') + '>' + esc(text) + '</option>';
+        }).join("") +
+        '</select></label>';
+    }
+    function buildTimes(current) {
+      const validCurrent = /^\d{2}:\d{2}$/.test(current) ? [current] : [];
+      const merged = Array.from(new Set(AVAILABILITY_TIMES.concat(validCurrent)));
+      merged.sort();
+      return merged;
+    }
+    return '<div class="availability-row" data-availability-row>' +
+      buildSelect("วัน", "availableDay", WEEK_DAYS, curDay, function (d) { return "วัน" + d; }) +
+      buildSelect("เวลาเริ่ม", "availableStart", buildTimes(curStart).filter(function (t) { return t !== "24:00"; }), curStart) +
+      buildSelect("เวลาสิ้นสุด", "availableEnd", buildTimes(curEnd).filter(function (t) { return t !== "00:00"; }), curEnd) +
+      '<button type="button" class="text-button" data-action="remove-availability" aria-label="ลบช่วงเวลานี้">ลบช่วงเวลา</button></div>';
+  }
+
+  function availabilityField(value, options, helpers) {
+    const opts = options && typeof options === "object" ? options : {};
+    const h = resolveHelpers(helpers);
+    const esc = h.html;
+    const legend = opts.legend || "เวลาที่สะดวกทำงาน";
+    const helperText = opts.helper || "เลือกได้หลายวันหรือหลายช่วงเวลา (ใช้ตัวเลือกวันและเวลาเท่านั้น)";
+    const requiredAttr = opts.required ? ' data-required="true"' : "";
+    const normalized = validateAndNormalizeAvailability(value, { allowEmpty: true });
+    let rowsHtml = "";
+    if (normalized.ok && normalized.slots.length > 0) {
+      rowsHtml = normalized.slots.map(function (slot) {
+        return availabilityRow(slot.day, slot.start, slot.end, h);
+      }).join("");
+    } else {
+      rowsHtml = parseAvailabilityClauses(value).map(function (clause) {
+        const days = clause.days.length ? clause.days : WEEK_DAYS;
+        const startStr = availabilityClock(clause.time && clause.time.after !== null ? clause.time.after : 0);
+        const endStr = availabilityClock(clause.time && clause.time.before !== null ? clause.time.before : 1440);
+        return days.map(function (d) {
+          return availabilityRow(d, startStr, endStr, h);
+        }).join("");
+      }).join("");
+    }
+    return '<fieldset class="availability-field"' + requiredAttr + '><legend>' + esc(legend) + '</legend>' +
+      '<p class="helper">' + esc(helperText) + '</p>' +
+      '<div data-availability-rows>' + (rowsHtml || availabilityRow("", "", "", h)) + '</div>' +
+      '<button type="button" class="secondary" data-action="add-availability">เพิ่มช่วงเวลา</button></fieldset>';
+  }
+
+  function selectedAvailability(data) {
+    if (!data || typeof data.getAll !== "function") return null;
+    const days = data.getAll("availableDay");
+    const starts = data.getAll("availableStart");
+    const ends = data.getAll("availableEnd");
+    const slots = [];
+    for (let i = 0; i < days.length; i++) {
+      const day = String(days[i] || "").trim();
+      const start = String(starts[i] || "").trim();
+      const end = String(ends[i] || "").trim();
+      if (!day && !start && !end) continue;
+      if (!day || !start || !end) return null;
+      slots.push({ day: day, start: start, end: end });
+    }
+    if (slots.length === 0) return "";
+    const check = validateAndNormalizeAvailability(slots, { allowEmpty: true });
+    return check.ok ? check.value : null;
+  }
+
   const DAY_ALIASES = [
     ["จันทร์", /(?:วัน)?จันทร์|จ\./g],
     ["อังคาร", /(?:วัน)?อังคาร|อ\./g],
@@ -558,6 +749,13 @@
   const api = {
     JOB_CATEGORIES: JOB_CATEGORIES,
     SEED_STUDENT_INTERESTS: SEED_STUDENT_INTERESTS,
+    WEEK_DAYS: WEEK_DAYS,
+    AVAILABILITY_TIMES: AVAILABILITY_TIMES,
+    availabilityClock: availabilityClock,
+    validateAndNormalizeAvailability: validateAndNormalizeAvailability,
+    availabilityRow: availabilityRow,
+    availabilityField: availabilityField,
+    selectedAvailability: selectedAvailability,
     computeJobMatch: computeJobMatch,
     rankJobsForStudent: rankJobsForStudent,
     renderMatchBadge: renderMatchBadge,

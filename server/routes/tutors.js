@@ -2,6 +2,7 @@ const express = require("express");
 const { getDb, makeId, getFullState } = require("../db");
 const { requireRole, optionalAuth } = require("../middleware/auth");
 const { saveDataUrlImage } = require("./uploads");
+const { validateAndNormalizeAvailability } = require("../../js/modules/m1-matching");
 
 const router = express.Router();
 
@@ -19,17 +20,21 @@ router.post("/", requireRole("student"), (req, res) => {
     const level = String(req.body?.level || "").trim();
     const rate = Number(req.body?.rate);
     const format = String(req.body?.format || "").trim();
-    const availability = String(req.body?.availability || "").trim().slice(0, 120);
+    const availCheck = validateAndNormalizeAvailability(req.body?.availability, { allowEmpty: false });
+    if (!availCheck.ok) {
+      return res.status(400).json({ error: availCheck.error });
+    }
+    const availability = availCheck.value;
     const experience = String(req.body?.experience || "").trim().slice(0, 600);
     const bannerText = String(req.body?.bannerText || "").trim().slice(0, 200);
     let bannerUrl = String(req.body?.bannerUrl || "").trim();
 
-    if (req.body?.bannerDataUrl) {
-      bannerUrl = saveDataUrlImage(req.body.bannerDataUrl, "banners") || bannerUrl;
-    }
-
     if (!subject || !VALID_LEVELS.has(level) || !VALID_FORMATS.has(format) || !availability || !experience || !Number.isFinite(rate) || rate < 0 || rate > 10000) {
       return res.status(400).json({ error: "กรอกข้อมูลการสอนและราคาต่อชั่วโมงให้ครบถ้วน" });
+    }
+
+    if (req.body?.bannerDataUrl) {
+      bannerUrl = saveDataUrlImage(req.body.bannerDataUrl, "banners") || bannerUrl;
     }
 
     if (id) {

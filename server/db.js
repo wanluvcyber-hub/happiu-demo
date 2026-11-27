@@ -13,7 +13,8 @@ function ensureDirectories() {
     path.join(UPLOADS_DIR, "checkins"),
     path.join(UPLOADS_DIR, "profiles"),
     path.join(UPLOADS_DIR, "banners"),
-    path.join(UPLOADS_DIR, "chat")
+    path.join(UPLOADS_DIR, "chat"),
+    path.join(UPLOADS_DIR, "slips")
   ]) {
     fs.mkdirSync(dir, { recursive: true });
   }

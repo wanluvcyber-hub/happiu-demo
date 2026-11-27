@@ -76,11 +76,28 @@
       }),
     approveSession: (sessionId) =>
       request(`/api/work-sessions/${encodeURIComponent(sessionId)}/approve`, { method: "PATCH" }),
-    paySession: (sessionId, proof) =>
-      request(`/api/work-sessions/${encodeURIComponent(sessionId)}/pay`, {
+    paySession: (sessionId, slipInput) => {
+      if (slipInput instanceof FormData) {
+        return request(`/api/work-sessions/${encodeURIComponent(sessionId)}/pay`, {
+          method: "PATCH",
+          body: slipInput,
+          isFormData: true
+        });
+      }
+      if (typeof Blob !== "undefined" && slipInput instanceof Blob) {
+        const formData = new FormData();
+        formData.append("slip", slipInput, slipInput.name || "slip.png");
+        return request(`/api/work-sessions/${encodeURIComponent(sessionId)}/pay`, {
+          method: "PATCH",
+          body: formData,
+          isFormData: true
+        });
+      }
+      return request(`/api/work-sessions/${encodeURIComponent(sessionId)}/pay`, {
         method: "PATCH",
-        body: { proof }
-      }),
+        body: { slipDataUrl: typeof slipInput === "string" ? slipInput : "" }
+      });
+    },
 
     // Applications & Chat
     applyJob: (payload) =>

@@ -51,8 +51,32 @@ const profileUpload = makeUploader("profiles");
 const bannerUpload = makeUploader("banners");
 const chatUpload = makeUploader("chat");
 
-// Placeholder SVG for seeded sample check-in/out records
+// Placeholder SVG for seeded sample check-in/out and payment slip records
 router.get("/placeholder/:kind", (req, res) => {
+  if (req.params.kind === "slip") {
+    const slipSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="540" height="680" viewBox="0 0 540 680">
+      <defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ecfdf5"/><stop offset="100%" stop-color="#f8fafc"/></linearGradient></defs>
+      <rect width="540" height="680" fill="#f1f5f9"/>
+      <rect x="30" y="30" width="480" height="620" rx="20" fill="url(#sg)" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="270" cy="112" r="36" fill="#10b981"/>
+      <path d="M254 112l11 11 22-24" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="270" y="180" text-anchor="middle" fill="#065f46" font-family="sans-serif" font-size="24" font-weight="700">โอนเงินค่าจ้างสำเร็จ</text>
+      <text x="270" y="212" text-anchor="middle" fill="#475569" font-family="sans-serif" font-size="15">สลิปโอนเงินตัวอย่างจากระบบ HappiU</text>
+      <line x1="64" y1="244" x2="476" y2="244" stroke="#cbd5e1" stroke-dasharray="6 6" stroke-width="2"/>
+      <text x="68" y="294" fill="#64748b" font-family="sans-serif" font-size="15">ผู้โอน (ผู้จ้าง)</text>
+      <text x="472" y="294" text-anchor="end" fill="#0f172a" font-family="sans-serif" font-size="16" font-weight="700">ผู้ประกอบการ / หน่วยงาน มน.</text>
+      <text x="68" y="346" fill="#64748b" font-family="sans-serif" font-size="15">ผู้รับเงิน (นิสิต)</text>
+      <text x="472" y="346" text-anchor="end" fill="#0f172a" font-family="sans-serif" font-size="16" font-weight="700">นิสิตมหาวิทยาลัยนเรศวร</text>
+      <text x="68" y="398" fill="#64748b" font-family="sans-serif" font-size="15">สถานะรายการ</text>
+      <text x="472" y="398" text-anchor="end" fill="#047857" font-family="sans-serif" font-size="16" font-weight="700">PAID · ชำระค่าจ้างแล้ว</text>
+      <rect x="64" y="446" width="412" height="96" rx="14" fill="#ffffff" stroke="#d1fae5" stroke-width="2"/>
+      <text x="270" y="486" text-anchor="middle" fill="#475569" font-family="sans-serif" font-size="14">บันทึกหลักฐานการจ่ายค่าจ้างรายรอบ</text>
+      <text x="270" y="518" text-anchor="middle" fill="#c2410c" font-family="sans-serif" font-size="18" font-weight="700">HappiU Verified Payment Slip</text>
+      <text x="270" y="608" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="13">ภาพสลิปตัวอย่างสำหรับข้อมูลเริ่มต้นในระบบเดโม</text>
+    </svg>`;
+    res.setHeader("Content-Type", "image/svg+xml; charset=utf-8");
+    return res.send(slipSvg);
+  }
   const isOut = req.params.kind === "checkout";
   const label = isOut ? "CHECK-OUT" : "CHECK-IN";
   const bg = isOut ? "#1e3a5f" : "#0f4c3a";

@@ -3,6 +3,7 @@ const { getDb, makeId, getFullState } = require("../db");
 const { requireAuth, requireRole, optionalAuth } = require("../middleware/auth");
 const { seedDatabase } = require("../seed");
 const { saveDataUrlImage } = require("./uploads");
+const { validateAndNormalizeAvailability } = require("../../js/modules/m1-matching");
 
 const router = express.Router();
 
@@ -48,7 +49,14 @@ router.patch("/student/profile", requireRole("student"), (req, res) => {
     const intro = req.body?.intro !== undefined ? String(req.body.intro).trim().slice(0, 600) : student.intro;
     const skills = req.body?.skills !== undefined ? String(req.body.skills).trim() : student.skills;
     const experience = req.body?.experience !== undefined ? String(req.body.experience).trim().slice(0, 600) : student.experience;
-    const availability = req.body?.availability !== undefined ? String(req.body.availability).trim() : student.availability;
+    let availability = student.availability;
+    if (req.body?.availability !== undefined) {
+      const availCheck = validateAndNormalizeAvailability(req.body.availability, { allowEmpty: true });
+      if (!availCheck.ok) {
+        return res.status(400).json({ error: availCheck.error });
+      }
+      availability = availCheck.value;
+    }
     const interestsJson = req.body?.interests !== undefined
       ? JSON.stringify(Array.isArray(req.body.interests) ? req.body.interests : [])
       : student.interests_json;
