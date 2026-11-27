@@ -808,20 +808,20 @@ function login() {
 
   const registerFormHtml = form("unified-register",
     '<div class="field-grid">' +
-      field("รหัสนิสิต หรือ อีเมลผู้ประกอบการ","identifier","","text",'required maxlength="100" autocomplete="username" placeholder="เช่น 66310999 หรือ shop@email.com"') +
-      field("ชื่อ–นามสกุล หรือ ชื่อร้านค้า","name","","text",'required maxlength="80" placeholder="เช่น สมชาย ใจดี หรือ คาเฟ่หน้ามอ"') +
+      field("รหัสนิสิต / อีเมลผู้จ้าง","identifier","","text",'required maxlength="100" autocomplete="username" placeholder="เช่น 66310999 หรือ shop@..."') +
+      field("ชื่อ–นามสกุล / ชื่อร้าน","name","","text",'required maxlength="80" placeholder="เช่น สมชาย ใจดี หรือ คาเฟ่"') +
     '</div>' +
     HappiUFaculties.renderFacultyMajorFields({
       facultyValue: "",
       majorValue: "",
-      facultyLabel: "คณะ (นิสิต มน. — พิมพ์ค้นหาหรือเลือก)",
-      majorLabel: "สาขาวิชา (นิสิต มน. — พิมพ์ค้นหาหรือเลือก)"
+      facultyLabel: "คณะ (นิสิต มน.)",
+      majorLabel: "สาขาวิชา (นิสิต มน.)"
     }) +
     '<div class="field-grid">' +
-      selectField("ชั้นปี (สำหรับนิสิต)","year",[["1","ปี 1"],["2","ปี 2"],["3","ปี 3"],["4","ปี 4"]],"1") +
-      selectField("ประเภทสถานที่ (สำหรับผู้ประกอบการ)","type",[["near","รอบมหาวิทยาลัย"],["campus","ในมหาวิทยาลัย"],["online","ออนไลน์"]],"near") +
+      selectField("ชั้นปี (นิสิต)","year",[["1","ปี 1"],["2","ปี 2"],["3","ปี 3"],["4","ปี 4"]],"1") +
+      selectField("ประเภทสถานที่ (ผู้จ้าง)","type",[["near","รอบมหาวิทยาลัย"],["campus","ในมหาวิทยาลัย"],["online","ออนไลน์"]],"near") +
     '</div>' +
-    field("รหัสผ่าน (อย่างน้อย 4 ตัวอักษร)","password","","password",'required minlength="4" maxlength="80" autocomplete="new-password"'),
+    field("รหัสผ่าน (อย่างน้อย 4 ตัวอักษร)","password","","password",'required minlength="4" maxlength="80" autocomplete="new-password" placeholder="ตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร"'),
     "สมัครสมาชิกและเข้าสู่ระบบ");
 
   return '<section class="entry" aria-labelledby="login-title">' +

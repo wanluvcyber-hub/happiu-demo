@@ -1700,6 +1700,57 @@ body[data-role] .mast .account.is-login-cta:not([hidden]):active {
   border-color: rgba(234, 88, 12, 0.25);
 }
 
+/* 15. Clean Single-Line Registration Form Alignment */
+form[data-form="unified-register"] .field-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+form[data-form="unified-register"] .field {
+  margin-bottom: 0 !important;
+  min-width: 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+form[data-form="unified-register"] .field > label,
+form[data-form="unified-register"] label.field {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+form[data-form="unified-register"] input,
+form[data-form="unified-register"] select {
+  height: 44px !important;
+  min-height: 44px !important;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+form[data-form="unified-register"] .nu-combo-input-wrap input {
+  margin-top: 0;
+}
+
+form[data-form="unified-register"] > .field {
+  margin-bottom: 12px !important;
+}
+
+form[data-form="unified-register"] button[type="submit"] {
+  width: 100%;
+  justify-content: center;
+  min-height: 46px !important;
+  font-weight: 700;
+}
+
+@media (max-width: 520px) {
+  form[data-form="unified-register"] .field-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .tt2d-hint-bar {
   display: flex;
   align-items: center;
